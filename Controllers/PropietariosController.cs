@@ -65,7 +65,7 @@ namespace InmobiliariaEfler.Controllers
         {
             try
             {
-
+                var propietari = repo.ObtenerPorId(id);
                 repo.ModificacionPropietario(id, propietario);
                 return RedirectToAction(nameof(Index));
             }
