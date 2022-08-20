@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using InmobiliariaEfler.Models;
@@ -10,10 +11,10 @@ namespace InmobiliariaEfler.Controllers
 {
     public class PropietariosController : Controller
     {
-        RepositorioPropietario repo;
+        private RepositorioPropietario repo = new RepositorioPropietario();
         public PropietariosController()
         {
-            repo = new RepositorioPropietario();
+
         }
         // GET: Propietarios
         public ActionResult Index()
@@ -25,7 +26,8 @@ namespace InmobiliariaEfler.Controllers
         // GET: Propietarios/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var propietario = repo.ObtenerPorId(id);
+            return View(propietario);
         }
 
         // GET: Propietarios/Create
@@ -63,9 +65,16 @@ namespace InmobiliariaEfler.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Propietario propietario)
         {
+            Propietario p = null;
             try
             {
-                repo.ModificacionPropietario(id, propietario);
+                p = repo.ObtenerPorId(id);
+                p.Nombre = propietario.Nombre;
+                p.Apellido = propietario.Apellido;
+                p.DNI = propietario.DNI;
+                p.Telefono = propietario.Telefono;
+                p.Email = propietario.Email;
+                repo.ModificacionPropietario(p);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -77,7 +86,8 @@ namespace InmobiliariaEfler.Controllers
         // GET: Propietarios/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var entidad = repo.ObtenerPorId(id);
+            return View(entidad);
         }
 
         // POST: Propietarios/Delete/5

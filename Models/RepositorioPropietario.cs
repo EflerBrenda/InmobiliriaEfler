@@ -57,17 +57,16 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public int ModificacionPropietario(int id, Propietario p)
+        public int ModificacionPropietario(Propietario p)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"UPDATE propietario SET nombre=@nombre, apellido=@apellido, dni=@dni, telefono=@telefono, email=@email" +
-                    $"WHERE id = @id";
+                string sql = $"UPDATE propietario SET nombre=@nombre, apellido=@apellido, dni=@dni, telefono=@telefono, email=@email WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@id", p.Id);
                     command.Parameters.AddWithValue("@nombre", p.Nombre);
                     command.Parameters.AddWithValue("@apellido", p.Apellido);
                     command.Parameters.AddWithValue("@dni", p.DNI);
@@ -113,7 +112,7 @@ namespace InmobiliariaEfler.Models
             Propietario p = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"SELECT id, nombre, apellido,dni,telefono,email FROM propietario" +
+                string sql = $"SELECT id,nombre,apellido,dni,telefono,email FROM propietario" +
                     $" WHERE id=@id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
