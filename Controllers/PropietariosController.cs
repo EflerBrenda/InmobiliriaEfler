@@ -11,10 +11,10 @@ namespace InmobiliariaEfler.Controllers
 {
     public class PropietariosController : Controller
     {
-        private RepositorioPropietario repo = new RepositorioPropietario();
+        private RepositorioPropietario repo;
         public PropietariosController()
         {
-
+            repo = new RepositorioPropietario();
         }
         // GET: Propietarios
         public ActionResult Index()
@@ -86,8 +86,8 @@ namespace InmobiliariaEfler.Controllers
         // GET: Propietarios/Delete/5
         public ActionResult Delete(int id)
         {
-            var entidad = repo.ObtenerPorId(id);
-            return View(entidad);
+            var propietario = repo.ObtenerPorId(id);
+            return View(propietario);
         }
 
         // POST: Propietarios/Delete/5

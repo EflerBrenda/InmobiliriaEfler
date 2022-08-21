@@ -1,14 +1,13 @@
-@model InmobiliariaEfler.Models.Propietario
+@model InmobiliariaEfler.Models.Inquilino
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Details";
 }
 
-<h1>Borrar propietario</h1>
+<h1>Detalles del inquilino</h1>
 
-<h3>Estas seguro de querer borrar este propietario?</h3>
 <div>
-    <h4>Propietario</h4>
+    <h4>Inquilino</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -48,9 +47,8 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
-
-    <form asp-action="Delete">
-        <input type="submit" value="Borrar" class="btn btn-danger" /> |
-        <a asp-action="Index">Volver a la lista de Propietarios</a>
-    </form>
+</div>
+<div>
+    @Html.ActionLink("Editar", "Edit", new {id= Model.Id}) |
+    <a asp-action="Index">Volver a la lista de Inquilinos</a>
 </div>

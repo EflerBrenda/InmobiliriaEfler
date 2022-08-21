@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InmobiliariaEfler.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,33 +10,40 @@ namespace InmobiliariaEfler.Controllers
 {
     public class InquilinosController : Controller
     {
-        // GET: Inquilinos
+        private RepositorioInquilino repo;
+        public InquilinosController()
+        {
+            repo = new RepositorioInquilino();
+        }
+        // GET: inquilinos
         public ActionResult Index()
         {
-            return View();
+            var inquilinos = repo.ObtenerInquilinos();
+            return View(inquilinos);
         }
 
-        // GET: Inquilinos/Details/5
+        // GET: inquilinos/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var inquilino = repo.ObtenerPorId(id);
+            return View(inquilino);
         }
 
-        // GET: Inquilinos/Create
+        // GET: inquilinos/Create
         public ActionResult Create()
         {
+
             return View();
         }
 
-        // POST: Inquilinos/Create
+        // POST: inquilinos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Inquilino inquilino)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                repo.AltaInquilino(inquilino);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -44,21 +52,28 @@ namespace InmobiliariaEfler.Controllers
             }
         }
 
-        // GET: Inquilinos/Edit/5
+        // GET: inquilinos/Edit/5y
         public ActionResult Edit(int id)
         {
-            return View();
+            var inquilino = repo.ObtenerPorId(id);
+            return View(inquilino);
         }
 
-        // POST: Inquilinos/Edit/5
+        // POST: inquilinos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inquilino inquilino)
         {
+            Inquilino p = null;
             try
             {
-                // TODO: Add update logic here
-
+                p = repo.ObtenerPorId(id);
+                p.Nombre = inquilino.Nombre;
+                p.Apellido = inquilino.Apellido;
+                p.DNI = inquilino.DNI;
+                p.Telefono = inquilino.Telefono;
+                p.Email = inquilino.Email;
+                repo.ModificacionInquilino(p);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -67,21 +82,22 @@ namespace InmobiliariaEfler.Controllers
             }
         }
 
-        // GET: Inquilinos/Delete/5
+        // GET: inquilinos/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var inquilino = repo.ObtenerPorId(id);
+            return View(inquilino);
         }
 
-        // POST: Inquilinos/Delete/5
+        // POST: inquilinos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Inquilino inquilino)
         {
             try
             {
-                // TODO: Add delete logic here
 
+                repo.BajaInquilino(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
