@@ -4,17 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Inmuebles</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crear nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Direccion)
             </th>
@@ -22,22 +19,10 @@
                 @Html.DisplayNameFor(model => model.Ambientes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Superficie)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Latitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Longitud)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Uso)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alquilado)
+                @Html.DisplayNameFor(model => model.Coordenadas)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OfertaActiva)
@@ -46,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.IdPropietario)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.idTipo)
+                @Html.DisplayNameFor(model => model.IdTipo)
             </th>
             <th></th>
         </tr>
@@ -56,45 +41,30 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Direccion)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Ambientes)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Superficie)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Latitud)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Longitud)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Precio)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Uso)
+                    @Html.DisplayFor(modelItem => item.Coordenadas)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Alquilado)
+                    @(item.OfertaActiva?"SI":"NO")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OfertaActiva)
+                    @(item.Duenio.Nombre+" "+item.Duenio.Apellido)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdPropietario)
+                    @(item.TipoInmueble.Descripcion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.idTipo)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Editar", "Edit", new {id=item.Id}) |
+                    @Html.ActionLink("Detalles", "Details", new {id=item.Id}) |
+                    @Html.ActionLink("Borrar", "Delete", new {id=item.Id})
                 </td>
             </tr>
         }

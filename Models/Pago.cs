@@ -5,7 +5,11 @@ namespace InmobiliariaEfler.Models;
 public class Pago
 {
     public int Id { get; set; }
+
+    [Display(Name = "Numero de Pago")]
     public String NumeroPago { get; set; }
+
+    [Display(Name = "Fecha de pago")]
     public DateTime FechaPago { get; set; }
     public decimal Importe { get; set; }
 

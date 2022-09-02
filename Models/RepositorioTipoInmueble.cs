@@ -79,27 +79,22 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public List<Inquilino> ObtenerInquilinos()
+        public List<TipoInmueble> ObtenerTipoInmueble()
         {
-            List<Inquilino> res = new List<Inquilino>();
+            List<TipoInmueble> res = new List<TipoInmueble>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = "SELECT id, nombre, apellido,dni,telefono,email FROM inquilino";
+                string sql = "SELECT id, descripcion FROM tipo_inmueble";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
                     var reader = comm.ExecuteReader();
                     while (reader.Read())
                     {
-                        res.Add(new Inquilino
+                        res.Add(new TipoInmueble
                         {
                             Id = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Apellido = reader.GetString(2),
-                            DNI = reader.GetString(3),
-                            Telefono = reader.GetString(4),
-                            Email = reader.GetString(5),
-
+                            Descripcion = reader.GetString(1),
                         });
                     }
                     conn.Close();

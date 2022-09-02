@@ -4,18 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Detalles</h1>
 
 <div>
     <h4>Inmueble</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Direccion)
         </dt>
@@ -53,38 +47,32 @@
             @Html.DisplayFor(model => model.Precio)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Uso)
+            @Html.DisplayNameFor(model => model.Coordenadas)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Uso)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Alquilado)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Alquilado)
+            @Html.DisplayFor(model => model.Coordenadas)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OfertaActiva)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OfertaActiva)
+            @(Model.OfertaActiva?"SI":"NO")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IdPropietario)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdPropietario)
+            @(Model.Duenio.Nombre+" "+Model.Duenio.Apellido)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.idTipo)
+            @Html.DisplayNameFor(model => model.IdTipo)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.idTipo)
+            @(Model.TipoInmueble.Descripcion)
         </dd>
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Editar", "Edit", new { Id = Model.Id}) |
+    <a asp-action="Index">Volver atrás</a>
 </div>

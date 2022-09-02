@@ -18,9 +18,9 @@ namespace InmobiliariaEfler.Controllers
         // GET: Contratos
         public ActionResult Index()
         {
-            /* var contrato = repo.ObtenerContratos();
-              return View(contrato);*/
-            return View();
+            var contrato = repo.ObtenerContratos();
+            return View(contrato);
+
         }
 
         // GET: Contratos/Details/5

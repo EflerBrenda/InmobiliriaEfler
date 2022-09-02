@@ -18,9 +18,8 @@ namespace InmobiliariaEfler.Controllers
         // GET: Pagos
         public ActionResult Index()
         {
-            /* var pagos = repo.ObtenerPagos();
-            return View(pagos);*/
-            return View();
+            var pagos = repo.ObtenerPagos();
+            return View(pagos);
         }
 
         // GET: Pagos/Details/5

@@ -5,9 +5,17 @@ namespace InmobiliariaEfler.Models;
 public class Contrato
 {
     public int Id { get; set; }
+
+    [Display(Name = "Fecha de inicio")]
     public DateTime FechaDesde { get; set; }
+
+    [Display(Name = "Fecha fin")]
     public DateTime FechaHasta { get; set; }
+
+    [Display(Name = "Monto del alquiler")]
     public decimal MontoAlquiler { get; set; }
+
+    [Display(Name = "Posee pago al día")]
     public Boolean PagoAlDia { get; set; }
 
     [Display(Name = "Inmueble")]
