@@ -9,7 +9,7 @@ public class Contrato
     [Display(Name = "Fecha de inicio")]
     public DateTime FechaDesde { get; set; }
 
-    [Display(Name = "Fecha fin")]
+    [Display(Name = "Fecha de finalización")]
     public DateTime FechaHasta { get; set; }
 
     [Display(Name = "Monto del alquiler")]

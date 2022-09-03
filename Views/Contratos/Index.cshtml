@@ -13,9 +13,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.FechaDesde)
             </th>
             <th>
@@ -41,25 +38,22 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    @(item.FechaDesde.Date.ToString("dd/MM/yyyy"))
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaDesde)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaHasta)
+                    @(item.FechaHasta.Date.ToString("dd/MM/yyyy"))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MontoAlquiler)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PagoAlDia)
+                    @(item.PagoAlDia?"SI":"NO")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdInmueble)
+                    @(item.Inmueble.Direccion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdInquilino)
+                    @(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |

@@ -10,15 +10,19 @@ namespace InmobiliariaEfler.Controllers
 {
     public class ContratosController : Controller
     {
-        private RepositorioContrato repo;
+        private RepositorioContrato repoContrato;
+        private RepositorioInmueble repoInmueble;
+        private RepositorioInquilino repoInquilino;
         public ContratosController()
         {
-            repo = new RepositorioContrato();
+            repoContrato = new RepositorioContrato();
+            repoInmueble = new RepositorioInmueble();
+            repoInquilino = new RepositorioInquilino();
         }
         // GET: Contratos
         public ActionResult Index()
         {
-            var contrato = repo.ObtenerContratos();
+            var contrato = repoContrato.ObtenerContratos();
             return View(contrato);
 
         }
@@ -26,24 +30,26 @@ namespace InmobiliariaEfler.Controllers
         // GET: Contratos/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var contrato = repoContrato.ObtenerPorId(id);
+            return View(contrato);
         }
 
         // GET: Contratos/Create
         public ActionResult Create()
         {
+            ViewBag.Inquilinos = repoInquilino.ObtenerInquilinos();
+            ViewBag.Inmuebles = repoInmueble.ObtenerInmuebles();
             return View();
         }
 
         // POST: Contratos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Contrato contrato)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                repoContrato.AltaContrato(contrato);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -55,18 +61,28 @@ namespace InmobiliariaEfler.Controllers
         // GET: Contratos/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ViewBag.Inquilinos = repoInquilino.ObtenerInquilinos();
+            ViewBag.Inmuebles = repoInmueble.ObtenerInmuebles();
+            var contrato = repoContrato.ObtenerPorId(id);
+            return View(contrato);
         }
 
         // POST: Contratos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Contrato contrato)
         {
+            Contrato c = new Contrato();
             try
             {
-                // TODO: Add update logic here
-
+                c = repoContrato.ObtenerPorId(id);
+                c.FechaDesde = contrato.FechaDesde;
+                c.FechaHasta = contrato.FechaHasta;
+                c.MontoAlquiler = contrato.MontoAlquiler;
+                c.PagoAlDia = contrato.PagoAlDia;
+                c.IdInmueble = contrato.IdInmueble;
+                c.IdInquilino = contrato.IdInquilino;
+                repoContrato.ModificacionContrato(c);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -78,18 +94,18 @@ namespace InmobiliariaEfler.Controllers
         // GET: Contratos/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var contrato = repoContrato.ObtenerPorId(id);
+            return View(contrato);
         }
 
         // POST: Contratos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Contrato contrato)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                repoContrato.BajaContrato(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

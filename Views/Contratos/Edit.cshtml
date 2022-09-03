@@ -2,9 +2,11 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+    var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
 <h4>Contrato</h4>
 <hr />
@@ -13,51 +15,57 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="FechaDesde" class="control-label"></label>
-                <input asp-for="FechaDesde" class="form-control" />
+                <input type="date" asp-for="FechaDesde" class="form-control" />
                 <span asp-validation-for="FechaDesde" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaHasta" class="control-label"></label>
-                <input asp-for="FechaHasta" class="form-control" />
+                <input type="date" asp-for="FechaHasta" class="form-control" />
                 <span asp-validation-for="FechaHasta" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MontoAlquiler" class="control-label"></label>
-                <input asp-for="MontoAlquiler" class="form-control" />
+                <input type="text" asp-for="MontoAlquiler" class="form-control" />
                 <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="PagoAlDia" /> @Html.DisplayNameFor(model => model.PagoAlDia)
+                    <input class="form-check-input" asp-for="PagoAlDia" /> @Html.DisplayNameFor(model =>
+                    model.PagoAlDia)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="IdInmueble" class="control-label"></label>
-                <input asp-for="IdInmueble" class="form-control" />
+                <label class="control-label">Inmuebles</label>
+                <select class="form-control" name="IdInmueble">
+                    @foreach (var item in Inmuebles)
+                    {
+                        @:<option @(item.Id==Model.IdInmueble ? "selected" : "") value="@item.Id"> @(item.Direccion)</option>
+                    }
+                </select>
                 <span asp-validation-for="IdInmueble" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdInquilino" class="control-label"></label>
-                <input asp-for="IdInquilino" class="form-control" />
+                <label class="control-label">Inquilino</label>
+                <select class="form-control" name="IdInquilino">
+                    @foreach (var item in Inquilinos)
+                    {
+                        @:<option @(item.Id==Model.IdInquilino ? "selected" : "") value="@item.Id"> @(item.Nombre+" "+item.Apellido)</option>
+                    }
+                </select>
                 <span asp-validation-for="IdInquilino" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver atrás</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

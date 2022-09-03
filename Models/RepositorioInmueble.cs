@@ -97,7 +97,6 @@ namespace InmobiliariaEfler.Models
         public List<Inmueble> ObtenerInmuebles()
         {
             List<Inmueble> res = new List<Inmueble>();
-
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
