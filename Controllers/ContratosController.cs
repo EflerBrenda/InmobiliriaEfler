@@ -72,7 +72,7 @@ namespace InmobiliariaEfler.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Contrato contrato)
         {
-            Contrato c = new Contrato();
+            Contrato c = null;
             try
             {
                 c = repoContrato.ObtenerPorId(id);

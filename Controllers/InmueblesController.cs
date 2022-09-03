@@ -72,7 +72,7 @@ namespace InmobiliariaEfler.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
-            Inmueble i = new Inmueble();
+            Inmueble i = null;
 
             try
             {
