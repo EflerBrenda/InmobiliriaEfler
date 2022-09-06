@@ -13,6 +13,7 @@ public class Inmueble
     public decimal Longitud { get; set; }
     public decimal Precio { get; set; }
     public decimal Coordenadas { get; set; }
+    public int Uso { get; set; }
 
     [Display(Name = "Disponible")]
     public Boolean OfertaActiva { get; set; }

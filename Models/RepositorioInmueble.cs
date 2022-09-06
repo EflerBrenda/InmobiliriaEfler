@@ -21,8 +21,8 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,coordenadas,oferta_activa,id_propietario,id_tipo) 
-                VALUES (@direccion,@ambientes,@superficie,@latitud,@longitud,@precio,@coordenadas,@oferta_activa,@id_propietario,@id_tipo); 
+                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,coordenadas,uso,oferta_activa,id_propietario,id_tipo) 
+                VALUES (@direccion,@ambientes,@superficie,@latitud,@longitud,@precio,@coordenadas,@uso,@oferta_activa,@id_propietario,@id_tipo); 
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -35,6 +35,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@longitud", i.Longitud);
                     command.Parameters.AddWithValue("@precio", i.Precio);
                     command.Parameters.AddWithValue("@coordenadas", i.Coordenadas);
+                    command.Parameters.AddWithValue("@uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
                     command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
@@ -70,7 +71,7 @@ namespace InmobiliariaEfler.Models
             {
                 string sql = @"UPDATE inmueble SET direccion=@direccion,ambientes=@ambientes,
                 superficie=@superficie,latitud=@latitud,longitud=@longitud,precio=@precio,
-                coordenadas=@coordenadas,oferta_activa=@oferta_activa,id_propietario=@id_propietario,
+                coordenadas=@coordenadas,uso=@uso,oferta_activa=@oferta_activa,id_propietario=@id_propietario,
                 id_tipo=@id_tipo 
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
@@ -84,6 +85,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@longitud", i.Longitud);
                     command.Parameters.AddWithValue("@precio", i.Precio);
                     command.Parameters.AddWithValue("@coordenadas", i.Coordenadas);
+                    command.Parameters.AddWithValue("@coordenadas", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
                     command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
@@ -101,7 +103,7 @@ namespace InmobiliariaEfler.Models
             {
                 string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
                 precio, coordenadas,oferta_activa,id_propietario,id_tipo,p.nombre,
-                p.apellido,ti.descripcion 
+                p.apellido,ti.descripcion,uso
                 FROM inmueble i 
                 JOIN propietario p ON(i.id_propietario = p.id) 
                 JOIN tipo_inmueble ti ON (i.id_tipo = ti.id);";
@@ -132,8 +134,8 @@ namespace InmobiliariaEfler.Models
                             TipoInmueble = new TipoInmueble
                             {
                                 Descripcion = reader.GetString(13),
-                            }
-
+                            },
+                            Uso = reader.GetInt32(14)
                         });
                     }
                     conn.Close();
@@ -148,7 +150,7 @@ namespace InmobiliariaEfler.Models
             {
                 string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
                 precio, coordenadas,oferta_activa,id_propietario,id_tipo,p.nombre,
-                p.apellido,ti.descripcion 
+                p.apellido,ti.descripcion,uso
                 FROM inmueble i 
                 JOIN propietario p ON(i.id_propietario = p.id) 
                 JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
@@ -182,7 +184,8 @@ namespace InmobiliariaEfler.Models
                             TipoInmueble = new TipoInmueble
                             {
                                 Descripcion = reader.GetString(13),
-                            }
+                            },
+                            Uso = reader.GetInt32(14)
                         };
                     }
                     connection.Close();
