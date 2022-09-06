@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.FechaDesde)
             </th>
             <th>
@@ -38,6 +41,9 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
                     @(item.FechaDesde.Date.ToString("dd/MM/yyyy"))
                 </td>
                 <td>
@@ -58,7 +64,7 @@
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
                     @Html.ActionLink("Detalles", "Details", new { id=item.Id}) |
-                    @Html.ActionLink("borrar", "Delete", new { id=item.Id })
+                    @Html.ActionLink("Borrar", "Delete", new { id=item.Id })
                 </td>
             </tr>
         }

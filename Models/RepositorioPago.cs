@@ -16,22 +16,21 @@ namespace InmobiliariaEfler.Models
         {
             connectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_efler;SslMode=none";
         }
-        public int AltaInquilino(Inquilino i)
+        public int AltaPago(Pago i)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO inquilino (Nombre, Apellido, Dni, Telefono, Email) " +
-                    $"VALUES (@nombre, @apellido, @dni, @telefono, @email);" +
-                    "SELECT LAST_INSERT_ID();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
+                string sql = @"INSERT INTO pagos (numero_pago, fecha_pago, importe, id_contrato) 
+                VALUES (@numero_pago, @fecha_pago, @importe, @id_contrato);
+                SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@nombre", i.Nombre);
-                    command.Parameters.AddWithValue("@apellido", i.Apellido);
-                    command.Parameters.AddWithValue("@dni", i.DNI);
-                    command.Parameters.AddWithValue("@telefono", i.Telefono);
-                    command.Parameters.AddWithValue("@email", i.Email);
+                    command.Parameters.AddWithValue("@numero_pago", i.NumeroPago);
+                    command.Parameters.AddWithValue("@fecha_pago", i.FechaPago);
+                    command.Parameters.AddWithValue("@importe", i.Importe);
+                    command.Parameters.AddWithValue("@id_contrato", i.IdContrato);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     i.Id = res;
@@ -40,12 +39,12 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public int BajaInquilino(int id)
+        public int BajaPago(int id)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM inquilino WHERE id = @id";
+                string sql = @"DELETE FROM pagos WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -57,21 +56,22 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public int ModificacionInquilino(Inquilino i)
+        public int ModificacionPago(Pago p)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"UPDATE inquilino SET nombre=@nombre, apellido=@apellido, dni=@dni, telefono=@telefono, email=@email WHERE id = @id";
+                string sql = @"UPDATE pagos 
+                SET numero_pago= @numero_pago,fecha_pago= @fecha_pago, importe=@importe,id_contrato= @id_contrato 
+                WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@id", i.Id);
-                    command.Parameters.AddWithValue("@nombre", i.Nombre);
-                    command.Parameters.AddWithValue("@apellido", i.Apellido);
-                    command.Parameters.AddWithValue("@dni", i.DNI);
-                    command.Parameters.AddWithValue("@telefono", i.Telefono);
-                    command.Parameters.AddWithValue("@email", i.Email);
+                    command.Parameters.AddWithValue("@id", p.Id);
+                    command.Parameters.AddWithValue("@numero_pago", p.NumeroPago);
+                    command.Parameters.AddWithValue("@fecha_pago", p.FechaPago);
+                    command.Parameters.AddWithValue("@importe", p.Importe);
+                    command.Parameters.AddWithValue("@id_contrato", p.IdContrato);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
@@ -84,7 +84,11 @@ namespace InmobiliariaEfler.Models
             List<Pago> res = new List<Pago>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = "SELECT id, numero_pago, fecha_pago,importe,id_contrato FROM pagos";
+                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
+                FROM pagos p
+                JOIN contrato c ON(p.id_contrato =c.id)
+                JOIN inquilino inq ON(c.id_inquilino = inq.id)
+                JOIN inmueble inm ON(c.id_inmueble= inm.id)";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -98,6 +102,18 @@ namespace InmobiliariaEfler.Models
                             FechaPago = reader.GetDateTime(2),
                             Importe = reader.GetDecimal(3),
                             IdContrato = reader.GetInt32(4),
+                            Contrato = new Contrato
+                            {
+                                Inmueble = new Inmueble
+                                {
+                                    Direccion = reader.GetString(5),
+                                },
+                                Inquilino = new Inquilino
+                                {
+                                    Nombre = reader.GetString(6),
+                                    Apellido = reader.GetString(7),
+                                }
+                            }
 
                         });
                     }
@@ -106,13 +122,17 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public Inquilino ObtenerPorId(int id)
+        public Pago ObtenerPorId(int id)
         {
-            Inquilino i = null;
+            Pago i = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"SELECT id,nombre,apellido,dni,telefono,email FROM inquilino" +
-                    $" WHERE id=@id";
+                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
+                FROM pagos p
+                JOIN contrato c ON(p.id_contrato =c.id)
+                JOIN inquilino inq ON(c.id_inquilino = inq.id)
+                JOIN inmueble inm ON(c.id_inmueble= inm.id)
+                WHERE p.id=@id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -121,14 +141,25 @@ namespace InmobiliariaEfler.Models
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        i = new Inquilino
+                        i = new Pago
                         {
                             Id = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Apellido = reader.GetString(2),
-                            DNI = reader.GetString(3),
-                            Telefono = reader.GetString(4),
-                            Email = reader.GetString(5)
+                            NumeroPago = reader.GetString(1),
+                            FechaPago = reader.GetDateTime(2),
+                            Importe = reader.GetDecimal(3),
+                            IdContrato = reader.GetInt32(4),
+                            Contrato = new Contrato
+                            {
+                                Inmueble = new Inmueble
+                                {
+                                    Direccion = reader.GetString(5),
+                                },
+                                Inquilino = new Inquilino
+                                {
+                                    Nombre = reader.GetString(6),
+                                    Apellido = reader.GetString(7),
+                                }
+                            }
                         };
                     }
                     connection.Close();

@@ -10,39 +10,43 @@ namespace InmobiliariaEfler.Controllers
 {
     public class PagosController : Controller
     {
-        private RepositorioPago repo;
+        private RepositorioPago repoPago;
+        private RepositorioContrato repoContrato;
         public PagosController()
         {
-            repo = new RepositorioPago();
+            repoPago = new RepositorioPago();
+            repoContrato = new RepositorioContrato();
         }
         // GET: Pagos
         public ActionResult Index()
         {
-            var pagos = repo.ObtenerPagos();
+            var pagos = repoPago.ObtenerPagos();
             return View(pagos);
         }
 
         // GET: Pagos/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var pago = repoPago.ObtenerPorId(id);
+            return View(pago);
         }
 
         // GET: Pagos/Create
         public ActionResult Create()
         {
+            ViewBag.Contratos = repoContrato.ObtenerContratos();
             return View();
         }
 
         // POST: Pagos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Pago pago)
         {
             try
             {
-                // TODO: Add insert logic here
 
+                repoPago.AltaPago(pago);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -54,18 +58,25 @@ namespace InmobiliariaEfler.Controllers
         // GET: Pagos/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ViewBag.Contratos = repoContrato.ObtenerContratos();
+            var pago = repoPago.ObtenerPorId(id);
+            return View(pago);
         }
 
         // POST: Pagos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Pago pago)
         {
+            Pago p = null;
             try
             {
-                // TODO: Add update logic here
-
+                p = repoPago.ObtenerPorId(id);
+                p.NumeroPago = pago.NumeroPago;
+                p.FechaPago = pago.FechaPago;
+                p.Importe = pago.Importe;
+                p.IdContrato = pago.IdContrato;
+                repoPago.ModificacionPago(p);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -77,7 +88,8 @@ namespace InmobiliariaEfler.Controllers
         // GET: Pagos/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var pago = repoPago.ObtenerPorId(id);
+            return View(pago);
         }
 
         // POST: Pagos/Delete/5
@@ -88,7 +100,7 @@ namespace InmobiliariaEfler.Controllers
             try
             {
                 // TODO: Add delete logic here
-
+                repoPago.BajaPago(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

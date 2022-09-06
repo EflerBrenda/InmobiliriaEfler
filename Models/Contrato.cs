@@ -4,6 +4,7 @@ namespace InmobiliariaEfler.Models;
 
 public class Contrato
 {
+    [Display(Name = "Código")]
     public int Id { get; set; }
 
     [Display(Name = "Fecha de inicio")]

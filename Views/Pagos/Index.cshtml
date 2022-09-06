@@ -13,9 +13,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.NumeroPago)
             </th>
             <th>
@@ -35,19 +32,16 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.NumeroPago)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaPago)
+                    @(item.FechaPago.Date.ToString("dd/MM/yyyy"))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Importe)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdContrato)
+                    @(item.IdContrato + "---"+item.Contrato.Inmueble.Direccion+"---"+item.Contrato.Inquilino.Apellido)
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |

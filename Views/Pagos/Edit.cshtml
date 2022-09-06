@@ -2,9 +2,10 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var Contratos = (IList<Contrato>)ViewBag.Contratos;
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
 <h4>Pago</h4>
 <hr />
@@ -13,18 +14,13 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="NumeroPago" class="control-label"></label>
                 <input asp-for="NumeroPago" class="form-control" />
                 <span asp-validation-for="NumeroPago" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaPago" class="control-label"></label>
-                <input asp-for="FechaPago" class="form-control" />
+                <input type="date" asp-for="FechaPago" class="form-control" />
                 <span asp-validation-for="FechaPago" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -32,22 +28,28 @@
                 <input asp-for="Importe" class="form-control" />
                 <span asp-validation-for="Importe" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IdContrato" class="control-label"></label>
-                <input asp-for="IdContrato" class="form-control" />
+             <div class="form-group">
+                <label class="control-label">Contrato</label>
+                <select class="form-control" name="IdContrato">
+                    @foreach (var item in Contratos)
+                    {
+                        @:<option @(item.Id==Model.IdContrato ? "selected" : "") value="@item.Id"> @(item.Id+"---"+item.Inmueble.Direccion+"---"+item.Inquilino.Apellido)</option>
+                    }
+                </select>
                 <span asp-validation-for="IdContrato" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver atrás</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
