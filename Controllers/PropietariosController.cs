@@ -47,9 +47,9 @@ namespace InmobiliariaEfler.Controllers
                 repo.AltaPropietario(propietario);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -77,9 +77,9 @@ namespace InmobiliariaEfler.Controllers
                 repo.ModificacionPropietario(p);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -101,9 +101,9 @@ namespace InmobiliariaEfler.Controllers
                 repo.BajaPropietario(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
     }

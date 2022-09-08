@@ -52,9 +52,9 @@ namespace InmobiliariaEfler.Controllers
                 repoContrato.AltaContrato(contrato);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -85,9 +85,9 @@ namespace InmobiliariaEfler.Controllers
                 repoContrato.ModificacionContrato(c);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -108,9 +108,9 @@ namespace InmobiliariaEfler.Controllers
                 repoContrato.BajaContrato(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
     }

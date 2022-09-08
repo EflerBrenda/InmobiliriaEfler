@@ -52,9 +52,9 @@ namespace InmobiliariaEfler.Controllers
                 repoInmueble.AltaInmueble(inmueble);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -91,9 +91,9 @@ namespace InmobiliariaEfler.Controllers
                 repoInmueble.ModificacionInmueble(i);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -114,9 +114,9 @@ namespace InmobiliariaEfler.Controllers
                 repoInmueble.BajaInmueble(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
     }

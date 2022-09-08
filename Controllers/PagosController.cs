@@ -49,9 +49,9 @@ namespace InmobiliariaEfler.Controllers
                 repoPago.AltaPago(pago);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -79,9 +79,9 @@ namespace InmobiliariaEfler.Controllers
                 repoPago.ModificacionPago(p);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
@@ -103,9 +103,9 @@ namespace InmobiliariaEfler.Controllers
                 repoPago.BajaPago(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
     }
