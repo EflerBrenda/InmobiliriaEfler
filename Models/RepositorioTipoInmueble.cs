@@ -84,7 +84,7 @@ namespace InmobiliariaEfler.Models
             List<TipoInmueble> res = new List<TipoInmueble>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = "SELECT id, descripcion FROM tipo_inmueble";
+                string sql = @"SELECT id, descripcion FROM tipo_inmueble";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();

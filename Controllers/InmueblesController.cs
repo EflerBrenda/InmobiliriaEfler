@@ -86,6 +86,7 @@ namespace InmobiliariaEfler.Controllers
                 i.Coordenadas = inmueble.Coordenadas;
                 i.OfertaActiva = inmueble.OfertaActiva;
                 i.IdPropietario = inmueble.IdPropietario;
+                i.Uso = inmueble.Uso;
                 i.IdTipo = inmueble.IdTipo;
                 repoInmueble.ModificacionInmueble(i);
                 return RedirectToAction(nameof(Index));

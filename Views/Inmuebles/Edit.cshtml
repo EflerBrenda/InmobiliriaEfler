@@ -3,8 +3,7 @@
 @{
     ViewData["Title"] = "Edit";
     var Propietarios = (IList<Propietario>)ViewBag.Propietarios;
-    var TiposInmueble = (IList<TipoInmueble>)ViewBag.TipoInmueble;
-    var Uso = new String[] { "Residencial", "Comercial" };
+    var TipoInmueble = (IList<TipoInmueble>)ViewBag.TipoInmueble;
 }
 
 <h1>Editar</h1>
@@ -69,8 +68,7 @@
                 <select class="form-control" name="IdPropietario">
                     @foreach (var item in Propietarios)
                     {
-                        @:<option @(item.Id==Model.IdPropietario ? "selected" : "") value="@item.Id"> @(item.Nombre + " " +
-                        item.Apellido)</option>
+                        @:<option @(item.Id==Model.IdPropietario ? "selected" : "") value="@item.Id"> @(item.Nombre+" "+item.Apellido)</option>
                     }
                 </select>
                 <span asp-validation-for="IdPropietario" class="text-danger"></span>
@@ -78,7 +76,7 @@
             <div class="form-group">
                 <label class="control-label">Tipo Inmueble</label>
                 <select class="form-control" name="IdTipo">
-                    @foreach (var item in TiposInmueble)
+                    @foreach (var item in TipoInmueble)
                     {
                         @:<option @(item.Id==Model.IdTipo ? "selected" : "") value="@item.Id"> @(item.Descripcion)</option>
                     }

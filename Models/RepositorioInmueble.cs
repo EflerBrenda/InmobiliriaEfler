@@ -85,7 +85,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@longitud", i.Longitud);
                     command.Parameters.AddWithValue("@precio", i.Precio);
                     command.Parameters.AddWithValue("@coordenadas", i.Coordenadas);
-                    command.Parameters.AddWithValue("@coordenadas", i.Uso);
+                    command.Parameters.AddWithValue("@Uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
                     command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
