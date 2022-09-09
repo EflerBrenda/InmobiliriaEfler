@@ -14,7 +14,7 @@ namespace InmobiliariaEfler.Models
         protected RepositorioBase(IConfiguration configuration)
         {
             this.configuration = configuration;
-            connectionString = configuration["ConnectionStrings:DefaultConnection"];
+            connectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_efler;SslMode=none";
         }
     }
 }

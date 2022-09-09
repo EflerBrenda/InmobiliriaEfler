@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaEfler.Models
 {
-    public class RepositorioContrato
+    public class RepositorioContrato : RepositorioBase
     {
         protected readonly string connectionString;
-        public RepositorioContrato()
+        public RepositorioContrato(IConfiguration configuration) : base(configuration)
         {
-            connectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_efler;SslMode=none";
+
         }
         public int AltaContrato(Contrato c)
         {

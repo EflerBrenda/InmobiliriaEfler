@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaEfler.Models
 {
-    public class RepositorioPago
+    public class RepositorioPago : RepositorioBase
     {
         protected readonly string connectionString;
-        public RepositorioPago()
+        public RepositorioPago(IConfiguration configuration) : base(configuration)
         {
-            connectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_efler;SslMode=none";
+
         }
         public int AltaPago(Pago i)
         {

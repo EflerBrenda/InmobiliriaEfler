@@ -9,43 +9,39 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaEfler.Models
 {
-    public class RepositorioTipoInmueble
+    public class RepositorioTipoInmueble : RepositorioBase
     {
         protected readonly string connectionString;
-        public RepositorioTipoInmueble()
+        public RepositorioTipoInmueble(IConfiguration configuration) : base(configuration)
         {
-            connectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_efler;SslMode=none";
+
         }
-        public int AltaInquilino(Inquilino i)
+        public int AltaTipoInmueble(TipoInmueble t)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO inquilino (Nombre, Apellido, Dni, Telefono, Email) " +
-                    $"VALUES (@nombre, @apellido, @dni, @telefono, @email);" +
-                    "SELECT LAST_INSERT_ID();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
+                string sql = @"INSERT INTO tipo_inmueble (descripcion) 
+                VALUES (@descripcion); 
+                SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@nombre", i.Nombre);
-                    command.Parameters.AddWithValue("@apellido", i.Apellido);
-                    command.Parameters.AddWithValue("@dni", i.DNI);
-                    command.Parameters.AddWithValue("@telefono", i.Telefono);
-                    command.Parameters.AddWithValue("@email", i.Email);
+                    command.Parameters.AddWithValue("@descripcion", t.Descripcion);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
-                    i.Id = res;
+                    t.Id = res;
                     connection.Close();
                 }
             }
             return res;
         }
-        public int BajaInquilino(int id)
+        public int BajaTipoInmueble(int id)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM inquilino WHERE id = @id";
+                string sql = @"DELETE FROM tipo_inmueble WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -57,21 +53,19 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public int ModificacionInquilino(Inquilino i)
+        public int ModificacionTipoInmueble(TipoInmueble t)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"UPDATE inquilino SET nombre=@nombre, apellido=@apellido, dni=@dni, telefono=@telefono, email=@email WHERE id = @id";
+                string sql = @"UPDATE tipo_inmueble 
+                SET descripcion=@descripcion 
+                WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@id", i.Id);
-                    command.Parameters.AddWithValue("@nombre", i.Nombre);
-                    command.Parameters.AddWithValue("@apellido", i.Apellido);
-                    command.Parameters.AddWithValue("@dni", i.DNI);
-                    command.Parameters.AddWithValue("@telefono", i.Telefono);
-                    command.Parameters.AddWithValue("@email", i.Email);
+                    command.Parameters.AddWithValue("@id", t.Id);
+                    command.Parameters.AddWithValue("@descripcion", t.Descripcion);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
@@ -102,13 +96,12 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public Inquilino ObtenerPorId(int id)
+        public TipoInmueble ObtenerPorId(int id)
         {
-            Inquilino i = null;
+            TipoInmueble t = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"SELECT id,nombre,apellido,dni,telefono,email FROM inquilino" +
-                    $" WHERE id=@id";
+                string sql = @"SELECT id,descripcion FROM tipo_inmueble WHERE id=@id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -117,20 +110,16 @@ namespace InmobiliariaEfler.Models
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        i = new Inquilino
+                        t = new TipoInmueble
                         {
                             Id = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Apellido = reader.GetString(2),
-                            DNI = reader.GetString(3),
-                            Telefono = reader.GetString(4),
-                            Email = reader.GetString(5)
+                            Descripcion = reader.GetString(1)
                         };
                     }
                     connection.Close();
                 }
             }
-            return i;
+            return t;
         }
 
     }

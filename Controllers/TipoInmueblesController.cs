@@ -11,9 +11,9 @@ namespace InmobiliariaEfler.Controllers
     public class TipoInmueblesController : Controller
     {
         private RepositorioTipoInmueble repo;
-        public TipoInmueblesController()
+        public TipoInmueblesController(IConfiguration configuration)
         {
-            repo = new RepositorioTipoInmueble();
+            repo = new RepositorioTipoInmueble(configuration);
         }
         // GET: TipoInmuebles
         public ActionResult Index()

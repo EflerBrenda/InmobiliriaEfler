@@ -13,11 +13,11 @@ namespace InmobiliariaEfler.Controllers
         private RepositorioContrato repoContrato;
         private RepositorioInmueble repoInmueble;
         private RepositorioInquilino repoInquilino;
-        public ContratosController()
+        public ContratosController(IConfiguration configuration)
         {
-            repoContrato = new RepositorioContrato();
-            repoInmueble = new RepositorioInmueble();
-            repoInquilino = new RepositorioInquilino();
+            repoContrato = new RepositorioContrato(configuration);
+            repoInmueble = new RepositorioInmueble(configuration);
+            repoInquilino = new RepositorioInquilino(configuration);
         }
         // GET: Contratos
         public ActionResult Index()

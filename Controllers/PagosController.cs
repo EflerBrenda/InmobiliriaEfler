@@ -12,10 +12,10 @@ namespace InmobiliariaEfler.Controllers
     {
         private RepositorioPago repoPago;
         private RepositorioContrato repoContrato;
-        public PagosController()
+        public PagosController(IConfiguration configuration)
         {
-            repoPago = new RepositorioPago();
-            repoContrato = new RepositorioContrato();
+            repoPago = new RepositorioPago(configuration);
+            repoContrato = new RepositorioContrato(configuration);
         }
         // GET: Pagos
         public ActionResult Index()
