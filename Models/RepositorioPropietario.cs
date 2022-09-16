@@ -11,7 +11,6 @@ namespace InmobiliariaEfler.Models
 {
     public class RepositorioPropietario : RepositorioBase
     {
-        protected readonly string connectionString;
         public RepositorioPropietario(IConfiguration configuration) : base(configuration)
         {
 
@@ -21,9 +20,9 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO propietario (Nombre, Apellido, Dni, Telefono, Email) " +
-                    $"VALUES (@nombre, @apellido, @dni, @telefono, @email);" +
-                    "SELECT LAST_INSERT_ID();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
+                string sql = @"INSERT INTO propietario (Nombre, Apellido, Dni, Telefono, Email) 
+                VALUES (@nombre, @apellido, @dni, @telefono, @email); 
+                SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;

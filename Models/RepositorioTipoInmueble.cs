@@ -11,7 +11,7 @@ namespace InmobiliariaEfler.Models
 {
     public class RepositorioTipoInmueble : RepositorioBase
     {
-        protected readonly string connectionString;
+
         public RepositorioTipoInmueble(IConfiguration configuration) : base(configuration)
         {
 

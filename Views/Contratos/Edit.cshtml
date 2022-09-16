@@ -34,12 +34,6 @@
                 <input type="text" asp-for="MontoAlquiler" class="form-control" />
                 <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="PagoAlDia" /> @Html.DisplayNameFor(model =>
-                    model.PagoAlDia)
-                </label>
-            </div>
             <div class="form-group">
                 <label class="control-label">Inmuebles</label>
                 <select class="form-control" name="IdInmueble">

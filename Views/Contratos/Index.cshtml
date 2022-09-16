@@ -25,9 +25,6 @@
                 @Html.DisplayNameFor(model => model.MontoAlquiler)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PagoAlDia)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.IdInmueble)
             </th>
             <th>
@@ -51,9 +48,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MontoAlquiler)
-                </td>
-                <td>
-                    @(item.PagoAlDia?"SI":"NO")
                 </td>
                 <td>
                     @(item.Inmueble.Direccion)

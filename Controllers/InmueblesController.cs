@@ -40,6 +40,7 @@ namespace InmobiliariaEfler.Controllers
         {
             ViewBag.Propietarios = repoPropietario.ObtenerPropietarios();
             ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTipoInmueble();
+            ViewBag.Usos = Inmueble.ObtenerUsos();
             return View();
         }
 
@@ -65,6 +66,7 @@ namespace InmobiliariaEfler.Controllers
         {
             ViewBag.Propietarios = repoPropietario.ObtenerPropietarios();
             ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTipoInmueble();
+            ViewBag.Usos = Inmueble.ObtenerUsos();
             var inmueble = repoInmueble.ObtenerPorId(id);
             return View(inmueble);
         }
@@ -85,7 +87,6 @@ namespace InmobiliariaEfler.Controllers
                 i.Latitud = inmueble.Latitud;
                 i.Longitud = inmueble.Longitud;
                 i.Precio = inmueble.Precio;
-                i.Coordenadas = inmueble.Coordenadas;
                 i.OfertaActiva = inmueble.OfertaActiva;
                 i.IdPropietario = inmueble.IdPropietario;
                 i.Uso = inmueble.Uso;

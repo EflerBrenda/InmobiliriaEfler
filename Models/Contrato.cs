@@ -16,9 +16,6 @@ public class Contrato
     [Display(Name = "Monto del alquiler")]
     public decimal MontoAlquiler { get; set; }
 
-    [Display(Name = "Posee pago al día")]
-    public Boolean PagoAlDia { get; set; }
-
     [Display(Name = "Inmueble")]
     public int IdInmueble { get; set; }
     [ForeignKey(nameof(IdInmueble))]

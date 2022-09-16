@@ -11,7 +11,7 @@ namespace InmobiliariaEfler.Models
 {
     public class RepositorioInmueble : RepositorioBase
     {
-        private IConfiguration config;
+
         public RepositorioInmueble(IConfiguration configuration) : base(configuration)
         {
 
@@ -21,8 +21,8 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,coordenadas,uso,oferta_activa,id_propietario,id_tipo) 
-                VALUES (@direccion,@ambientes,@superficie,@latitud,@longitud,@precio,@coordenadas,@uso,@oferta_activa,@id_propietario,@id_tipo); 
+                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,uso,oferta_activa,id_propietario,id_tipo) 
+                VALUES (@direccion,@ambientes,@superficie,@latitud,@longitud,@precio,@uso,@oferta_activa,@id_propietario,@id_tipo); 
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -34,7 +34,6 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@latitud", i.Latitud);
                     command.Parameters.AddWithValue("@longitud", i.Longitud);
                     command.Parameters.AddWithValue("@precio", i.Precio);
-                    command.Parameters.AddWithValue("@coordenadas", i.Coordenadas);
                     command.Parameters.AddWithValue("@uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
@@ -71,7 +70,7 @@ namespace InmobiliariaEfler.Models
             {
                 string sql = @"UPDATE inmueble SET direccion=@direccion,ambientes=@ambientes,
                 superficie=@superficie,latitud=@latitud,longitud=@longitud,precio=@precio,
-                coordenadas=@coordenadas,uso=@uso,oferta_activa=@oferta_activa,id_propietario=@id_propietario,
+                uso=@uso,oferta_activa=@oferta_activa,id_propietario=@id_propietario,
                 id_tipo=@id_tipo 
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
@@ -84,7 +83,6 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@latitud", i.Latitud);
                     command.Parameters.AddWithValue("@longitud", i.Longitud);
                     command.Parameters.AddWithValue("@precio", i.Precio);
-                    command.Parameters.AddWithValue("@coordenadas", i.Coordenadas);
                     command.Parameters.AddWithValue("@Uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
@@ -102,7 +100,7 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
-                precio, coordenadas,oferta_activa,id_propietario,id_tipo,p.nombre,
+                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
                 JOIN propietario p ON(i.id_propietario = p.id) 
@@ -122,20 +120,19 @@ namespace InmobiliariaEfler.Models
                             Latitud = reader.GetDecimal(4),
                             Longitud = reader.GetDecimal(5),
                             Precio = reader.GetDecimal(6),
-                            Coordenadas = reader.GetDecimal(7),
-                            OfertaActiva = reader.GetBoolean(8),
-                            IdPropietario = reader.GetInt32(9),
-                            IdTipo = reader.GetInt32(10),
+                            OfertaActiva = reader.GetBoolean(7),
+                            IdPropietario = reader.GetInt32(8),
+                            IdTipo = reader.GetInt32(9),
                             Duenio = new Propietario
                             {
-                                Nombre = reader.GetString(11),
-                                Apellido = reader.GetString(12),
+                                Nombre = reader.GetString(10),
+                                Apellido = reader.GetString(11),
                             },
                             TipoInmueble = new TipoInmueble
                             {
-                                Descripcion = reader.GetString(13),
+                                Descripcion = reader.GetString(12),
                             },
-                            Uso = reader.GetInt32(14)
+                            Uso = reader.GetInt32(13)
                         });
                     }
                     conn.Close();
@@ -149,7 +146,7 @@ namespace InmobiliariaEfler.Models
             using (var connection = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
-                precio, coordenadas,oferta_activa,id_propietario,id_tipo,p.nombre,
+                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
                 JOIN propietario p ON(i.id_propietario = p.id) 
@@ -172,20 +169,19 @@ namespace InmobiliariaEfler.Models
                             Latitud = reader.GetDecimal(4),
                             Longitud = reader.GetDecimal(5),
                             Precio = reader.GetDecimal(6),
-                            Coordenadas = reader.GetDecimal(7),
-                            OfertaActiva = reader.GetBoolean(8),
-                            IdPropietario = reader.GetInt32(9),
-                            IdTipo = reader.GetInt32(10),
+                            OfertaActiva = reader.GetBoolean(7),
+                            IdPropietario = reader.GetInt32(8),
+                            IdTipo = reader.GetInt32(9),
                             Duenio = new Propietario
                             {
-                                Nombre = reader.GetString(11),
-                                Apellido = reader.GetString(12),
+                                Nombre = reader.GetString(10),
+                                Apellido = reader.GetString(11),
                             },
                             TipoInmueble = new TipoInmueble
                             {
-                                Descripcion = reader.GetString(13),
+                                Descripcion = reader.GetString(12),
                             },
-                            Uso = reader.GetInt32(14)
+                            Uso = reader.GetInt32(13)
                         };
                     }
                     connection.Close();

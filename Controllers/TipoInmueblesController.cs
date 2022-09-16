@@ -10,23 +10,24 @@ namespace InmobiliariaEfler.Controllers
 {
     public class TipoInmueblesController : Controller
     {
-        private RepositorioTipoInmueble repo;
+        private RepositorioTipoInmueble repoTipoInmueble;
         public TipoInmueblesController(IConfiguration configuration)
         {
-            repo = new RepositorioTipoInmueble(configuration);
+            repoTipoInmueble = new RepositorioTipoInmueble(configuration);
         }
         // GET: TipoInmuebles
         public ActionResult Index()
         {
-            /* var tipoInmuebles = repo.ObtenertipoInmuebles();
-            return View(tipoInmuebles);*/
-            return View();
+            var tipoInmuebles = repoTipoInmueble.ObtenerTipoInmueble();
+            return View(tipoInmuebles);
+
         }
 
         // GET: TipoInmuebles/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var tipoInmuebles = repoTipoInmueble.ObtenerPorId(id);
+            return View(tipoInmuebles);
         }
 
         // GET: TipoInmuebles/Create
@@ -38,63 +39,65 @@ namespace InmobiliariaEfler.Controllers
         // POST: TipoInmuebles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(TipoInmueble tipoInmueble)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                repoTipoInmueble.AltaTipoInmueble(tipoInmueble);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
         // GET: TipoInmuebles/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var tipoInmuebles = repoTipoInmueble.ObtenerPorId(id);
+            return View(tipoInmuebles);
         }
 
         // POST: TipoInmuebles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, TipoInmueble tipoInmueble)
         {
+            TipoInmueble t = null;
             try
             {
-                // TODO: Add update logic here
-
+                t = repoTipoInmueble.ObtenerPorId(id);
+                t.Descripcion = tipoInmueble.Descripcion;
+                repoTipoInmueble.ModificacionTipoInmueble(t);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
 
         // GET: TipoInmuebles/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var tipoInmuebles = repoTipoInmueble.ObtenerPorId(id);
+            return View(tipoInmuebles);
         }
 
         // POST: TipoInmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, TipoInmueble tipoInmueble)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                repoTipoInmueble.BajaTipoInmueble(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                throw;
             }
         }
     }

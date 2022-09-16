@@ -9,43 +9,46 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaEfler.Models
 {
-    public class RepositorioInquilino : RepositorioBase
+    public class RepositorioUsuario : RepositorioBase
     {
-
-        public RepositorioInquilino(IConfiguration configuration) : base(configuration)
+        public RepositorioUsuario(IConfiguration configuration) : base(configuration)
         {
 
         }
-        public int AltaInquilino(Inquilino i)
+        public int AltaUsuario(Usuario u)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO inquilino (Nombre, Apellido, Dni, Telefono, Email) 
-                VALUES (@nombre, @apellido, @dni, @telefono, @email);
-                SELECT LAST_INSERT_ID();";
+                string sql = @"INSERT INTO usuario (Nombre, Apellido, Email, Password, Avatar,rol) 
+                    VALUES (@nombre, @apellido, @email, @password, @avatar, @rol);
+                    SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@nombre", i.Nombre);
-                    command.Parameters.AddWithValue("@apellido", i.Apellido);
-                    command.Parameters.AddWithValue("@dni", i.DNI);
-                    command.Parameters.AddWithValue("@telefono", i.Telefono);
-                    command.Parameters.AddWithValue("@email", i.Email);
+                    command.Parameters.AddWithValue("@nombre", u.Nombre);
+                    command.Parameters.AddWithValue("@apellido", u.Apellido);
+                    command.Parameters.AddWithValue("@email", u.Email);
+                    command.Parameters.AddWithValue("@password", u.Password);
+                    if (String.IsNullOrEmpty(u.Avatar))
+                        command.Parameters.AddWithValue("@avatar", DBNull.Value);
+                    else
+                        command.Parameters.AddWithValue("@avatar", u.Avatar);
+                    command.Parameters.AddWithValue("@rol", u.Rol);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
-                    i.Id = res;
+                    u.Id = res;
                     connection.Close();
                 }
             }
             return res;
         }
-        public int BajaInquilino(int id)
+        public int BajaUsuario(int id)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM inquilino WHERE id = @id";
+                string sql = @"DELETE FROM usuario WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -57,21 +60,24 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public int ModificacionInquilino(Inquilino i)
+        public int ModificacionUsuario(Usuario u)
         {
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"UPDATE inquilino SET nombre=@nombre, apellido=@apellido, dni=@dni, telefono=@telefono, email=@email WHERE id = @id";
+                string sql = @"UPDATE usuario 
+                SET nombre= @nombre, apellido=@apellido, email=@email, password=@password, avatar=@avatar, rol=@rol 
+                WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@id", i.Id);
-                    command.Parameters.AddWithValue("@nombre", i.Nombre);
-                    command.Parameters.AddWithValue("@apellido", i.Apellido);
-                    command.Parameters.AddWithValue("@dni", i.DNI);
-                    command.Parameters.AddWithValue("@telefono", i.Telefono);
-                    command.Parameters.AddWithValue("@email", i.Email);
+                    command.Parameters.AddWithValue("@id", u.Id);
+                    command.Parameters.AddWithValue("@nombre", u.Nombre);
+                    command.Parameters.AddWithValue("@apellido", u.Apellido);
+                    command.Parameters.AddWithValue("@email", u.Email);
+                    command.Parameters.AddWithValue("@password", u.Password);
+                    command.Parameters.AddWithValue("@avatar", u.Avatar);
+                    command.Parameters.AddWithValue("@rol", u.Rol);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
@@ -79,26 +85,28 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public List<Inquilino> ObtenerInquilinos()
+        public List<Usuario> ObtenerUsuarios()
         {
-            List<Inquilino> res = new List<Inquilino>();
+            List<Usuario> res = new List<Usuario>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = "SELECT id, nombre, apellido,dni,telefono,email FROM inquilino";
+                string sql = @"SELECT id, Nombre, Apellido, Email, Password, Avatar,rol 
+                            FROM usuario";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
                     var reader = comm.ExecuteReader();
                     while (reader.Read())
                     {
-                        res.Add(new Inquilino
+                        res.Add(new Usuario
                         {
                             Id = reader.GetInt32(0),
                             Nombre = reader.GetString(1),
                             Apellido = reader.GetString(2),
-                            DNI = reader.GetString(3),
-                            Telefono = reader.GetString(4),
-                            Email = reader.GetString(5),
+                            Email = reader.GetString(3),
+                            Password = reader.GetString(4),
+                            Avatar = reader["Avatar"].ToString(),
+                            Rol = reader.GetInt32(6)
 
                         });
                     }
@@ -107,13 +115,14 @@ namespace InmobiliariaEfler.Models
             }
             return res;
         }
-        public Inquilino ObtenerPorId(int id)
+        public Usuario ObtenerPorId(int id)
         {
-            Inquilino i = null;
+            Usuario u = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"SELECT id,nombre,apellido,dni,telefono,email FROM inquilino" +
-                    $" WHERE id=@id";
+                string sql = @"SELECT id, Nombre, Apellido, Email, Password, Avatar,rol 
+                            FROM usuario 
+                            WHERE id=@id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -122,20 +131,21 @@ namespace InmobiliariaEfler.Models
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        i = new Inquilino
+                        u = new Usuario
                         {
                             Id = reader.GetInt32(0),
                             Nombre = reader.GetString(1),
                             Apellido = reader.GetString(2),
-                            DNI = reader.GetString(3),
-                            Telefono = reader.GetString(4),
-                            Email = reader.GetString(5)
+                            Email = reader.GetString(3),
+                            Password = reader.GetString(4),
+                            Avatar = reader["Avatar"].ToString(),
+                            Rol = reader.GetInt32(6)
                         };
                     }
                     connection.Close();
                 }
             }
-            return i;
+            return u;
         }
 
     }

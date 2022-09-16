@@ -4,6 +4,11 @@ namespace InmobiliariaEfler.Models;
 
 public class Inmueble
 {
+    public enum enUsos
+    {
+        Residencial = 1,
+        Comercial = 2,
+    }
     public int Id { get; set; }
     [Display(Name = "Dirección")]
     public String Direccion { get; set; }
@@ -12,7 +17,7 @@ public class Inmueble
     public decimal Latitud { get; set; }
     public decimal Longitud { get; set; }
     public decimal Precio { get; set; }
-    public decimal Coordenadas { get; set; }
+
     public int Uso { get; set; }
 
     [Display(Name = "Disponible")]
@@ -27,5 +32,17 @@ public class Inmueble
     public int IdTipo { get; set; }
     [ForeignKey(nameof(IdTipo))]
     public TipoInmueble TipoInmueble { get; set; }
+
+    public string UsoNombre => Uso > 0 ? ((enUsos)Uso).ToString() : "";
+    public static IDictionary<int, string> ObtenerUsos()
+    {
+        SortedDictionary<int, string> usos = new SortedDictionary<int, string>();
+        Type tipoEnumUso = typeof(enUsos);
+        foreach (var valor in Enum.GetValues(tipoEnumUso))
+        {
+            usos.Add((int)valor, Enum.GetName(tipoEnumUso, valor));
+        }
+        return usos;
+    }
 
 }

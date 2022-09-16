@@ -79,7 +79,6 @@ namespace InmobiliariaEfler.Controllers
                 c.FechaDesde = contrato.FechaDesde;
                 c.FechaHasta = contrato.FechaHasta;
                 c.MontoAlquiler = contrato.MontoAlquiler;
-                c.PagoAlDia = contrato.PagoAlDia;
                 c.IdInmueble = contrato.IdInmueble;
                 c.IdInquilino = contrato.IdInquilino;
                 repoContrato.ModificacionContrato(c);
