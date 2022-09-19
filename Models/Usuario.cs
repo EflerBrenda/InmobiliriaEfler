@@ -13,8 +13,11 @@ public class Usuario
     public String Nombre { get; set; }
     public String Apellido { get; set; }
     public string Email { get; set; }
+
+    [Required, DataType(DataType.Password)]
     public string Password { get; set; }
-    public string Avatar { get; set; }
+
+    public string? Avatar { get; set; }
 
     [Display(Name = "Avatar")]
     public IFormFile AvatarFile { get; set; }

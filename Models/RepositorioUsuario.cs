@@ -147,6 +147,70 @@ namespace InmobiliariaEfler.Models
             }
             return u;
         }
+        public Usuario ObtenerPorEmail(string email)
+        {
+            Usuario u = null;
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string sql = @"SELECT id, Nombre, Apellido, Email, Password, Avatar,rol 
+                            FROM usuario 
+                            WHERE Email=@email";
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.Add("@email", MySqlDbType.VarChar).Value = email;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        u = new Usuario
+                        {
+                            Id = reader.GetInt32(0),
+                            Nombre = reader.GetString(1),
+                            Apellido = reader.GetString(2),
+                            Email = reader.GetString(3),
+                            Password = reader.GetString(4),
+                            Avatar = reader["Avatar"].ToString(),
+                            Rol = reader.GetInt32(6)
+                        };
+                    }
+                    connection.Close();
+                }
+            }
+            return u;
+        }
+        /* public UsuarioLogin ObtenerUsuarioEmail(string email)
+         {
+             UsuarioLogin ul = null;
+             using (MySqlConnection connection = new MySqlConnection(connectionString))
+             {
+                 string sql = @"SELECT id, Nombre, Apellido, Email, Password, rol 
+                             FROM usuario 
+                             WHERE Email=@email";
+                 using (MySqlCommand command = new MySqlCommand(sql, connection))
+                 {
+                     command.CommandType = CommandType.Text;
+                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = email;
+                     connection.Open();
+                     var reader = command.ExecuteReader();
+                     if (reader.Read())
+                     {
+                         ul = new UsuarioLogin
+                         {
+
+                             Id = reader.GetInt32(0),
+                             Nombre = reader.GetString(1),
+                             Apellido = reader.GetString(2),
+                             Email = reader.GetString(3),
+                             Password = reader.GetString(4),
+                             Rol = reader.GetInt32(5)
+                         };
+                     }
+                     connection.Close();
+                 }
+             }
+             return ul;
+         }*/
 
     }
 
