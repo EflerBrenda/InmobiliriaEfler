@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using InmobiliariaEfler.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaEfler.Controllers
 {
@@ -20,6 +23,7 @@ namespace InmobiliariaEfler.Controllers
             repoInquilino = new RepositorioInquilino(configuration);
         }
         // GET: Contratos
+        [Authorize]
         public ActionResult Index()
         {
             var contrato = repoContrato.ObtenerContratos();
@@ -28,6 +32,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Contratos/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             var contrato = repoContrato.ObtenerPorId(id);
@@ -35,6 +40,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Contratos/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Inquilinos = repoInquilino.ObtenerInquilinos();
@@ -45,6 +51,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Contratos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Contrato contrato)
         {
             try
@@ -59,6 +66,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Contratos/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             ViewBag.Inquilinos = repoInquilino.ObtenerInquilinos();
@@ -70,6 +78,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Contratos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Contrato contrato)
         {
             Contrato c = null;
@@ -91,6 +100,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Contratos/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             var contrato = repoContrato.ObtenerPorId(id);
@@ -100,6 +110,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Contratos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Contrato contrato)
         {
             try

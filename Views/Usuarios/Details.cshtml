@@ -1,7 +1,7 @@
 @model InmobiliariaEfler.Models.Usuario
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle de Usuario";
 }
 
 <h1>Detalles</h1>
@@ -44,5 +44,13 @@
 </div>
 <div>
     @Html.ActionLink("Editar", "Edit", new { id=Model.Id }) |
-    <a asp-action="Index">Volver atrás</a>
+    @if (User.IsInRole("Administrador"))
+    {
+
+        <a asp-action="Index">Volver atrás</a>
+    }
+    else
+    {
+        <a asp-controller="Home" asp-action="Index">Volver atrás</a>
+    }
 </div>

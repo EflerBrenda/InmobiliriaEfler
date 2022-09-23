@@ -1,7 +1,7 @@
 @model IEnumerable<InmobiliariaEfler.Models.Propietario>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Ver propietarios";
 }
 
 <h1>Propietarios</h1>
@@ -51,8 +51,12 @@
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
-                    @Html.ActionLink("Detalles", "Details", new { id=item.Id }) |
-                    @Html.ActionLink("Borrar", "Delete", new { id=item.Id })
+                    @Html.ActionLink("Detalles", "Details", new { id=item.Id })
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <label>|</label>
+                        @Html.ActionLink("Borrar", "Delete", new { id=item.Id })
+                    }
                 </td>
             </tr>
         }

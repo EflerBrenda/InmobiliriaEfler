@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using InmobiliariaEfler.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaEfler.Controllers
 {
@@ -16,6 +19,7 @@ namespace InmobiliariaEfler.Controllers
             repo = new RepositorioInquilino(configuration);
         }
         // GET: inquilinos
+        [Authorize]
         public ActionResult Index()
         {
             var inquilinos = repo.ObtenerInquilinos();
@@ -23,6 +27,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: inquilinos/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             var inquilino = repo.ObtenerPorId(id);
@@ -30,12 +35,13 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: inquilinos/Create
+        [Authorize]
         public ActionResult Create()
         {
 
             return View();
         }
-
+        [Authorize]
         // POST: inquilinos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -53,6 +59,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: inquilinos/Edit/5y
+        [Authorize]
         public ActionResult Edit(int id)
         {
             var inquilino = repo.ObtenerPorId(id);
@@ -62,6 +69,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: inquilinos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inquilino inquilino)
         {
             Inquilino p = null;
@@ -83,6 +91,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: inquilinos/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             var inquilino = repo.ObtenerPorId(id);
@@ -92,6 +101,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: inquilinos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inquilino inquilino)
         {
             try

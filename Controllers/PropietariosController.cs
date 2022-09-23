@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using InmobiliariaEfler.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaEfler.Controllers
 {
@@ -17,6 +20,7 @@ namespace InmobiliariaEfler.Controllers
             repo = new RepositorioPropietario(configuration);
         }
         // GET: Propietarios
+        [Authorize]
         public ActionResult Index()
         {
             var propietarios = repo.ObtenerPropietarios();
@@ -24,6 +28,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Propietarios/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             var propietario = repo.ObtenerPorId(id);
@@ -31,6 +36,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Propietarios/Create
+        [Authorize]
         public ActionResult Create()
         {
 
@@ -40,6 +46,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Propietarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Propietario propietario)
         {
             try
@@ -53,7 +60,8 @@ namespace InmobiliariaEfler.Controllers
             }
         }
 
-        // GET: Propietarios/Edit/5y
+        // GET: Propietarios/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             var propietario = repo.ObtenerPorId(id);
@@ -63,6 +71,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Propietarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Propietario propietario)
         {
             Propietario p = null;
@@ -84,6 +93,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Propietarios/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             var propietario = repo.ObtenerPorId(id);
@@ -91,6 +101,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // POST: Propietarios/Delete/5
+        [Authorize(Policy = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Propietario propietario)

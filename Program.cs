@@ -9,7 +9,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 {
                     options.LoginPath = "/Usuarios/Login";
                     options.LogoutPath = "/Usuarios/Logout";
-                    options.AccessDeniedPath = "/Home/Index";
+                    options.AccessDeniedPath = "/Home/Restringido";
                 });
 
 
@@ -37,24 +37,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-/*app.UseCookiePolicy(new CookiePolicyOptions){
-    MinimunSameSitePolicy = SameSiteMode.None,
-}*/
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Usuarios}/{action=Login}/{id?}");
-
-app.MapControllerRoute(
-    name: "Home",
-    pattern: "{controller=Home}/{action=index}/{id?}");
-
-/*app.MapControllerRoute(
-    name: "Login",
-    pattern: "login",//"login/{**accion}",
-    new { controller = "Usuarios", action = "Login" });*/
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

@@ -66,7 +66,7 @@ namespace InmobiliariaEfler.Models
             using (var connection = new MySqlConnection(connectionString))
             {
                 string sql = @"UPDATE usuario 
-                SET nombre= @nombre, apellido=@apellido, email=@email, password=@password, avatar=@avatar, rol=@rol 
+                SET nombre= @nombre, apellido=@apellido, email=@email, avatar=@avatar, rol=@rol
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -75,7 +75,6 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@nombre", u.Nombre);
                     command.Parameters.AddWithValue("@apellido", u.Apellido);
                     command.Parameters.AddWithValue("@email", u.Email);
-                    command.Parameters.AddWithValue("@password", u.Password);
                     command.Parameters.AddWithValue("@avatar", u.Avatar);
                     command.Parameters.AddWithValue("@rol", u.Rol);
                     connection.Open();
@@ -179,38 +178,27 @@ namespace InmobiliariaEfler.Models
             }
             return u;
         }
-        /* public UsuarioLogin ObtenerUsuarioEmail(string email)
-         {
-             UsuarioLogin ul = null;
-             using (MySqlConnection connection = new MySqlConnection(connectionString))
-             {
-                 string sql = @"SELECT id, Nombre, Apellido, Email, Password, rol 
-                             FROM usuario 
-                             WHERE Email=@email";
-                 using (MySqlCommand command = new MySqlCommand(sql, connection))
-                 {
-                     command.CommandType = CommandType.Text;
-                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = email;
-                     connection.Open();
-                     var reader = command.ExecuteReader();
-                     if (reader.Read())
-                     {
-                         ul = new UsuarioLogin
-                         {
+        public int ModificacionPassword(int id, CambioPassword p)
+        {
+            int res = -1;
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                string sql = @"UPDATE usuario 
+                SET password=@password
+                WHERE id = @id";
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@password", p.PasswordConfirmacion);
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            return res;
+        }
 
-                             Id = reader.GetInt32(0),
-                             Nombre = reader.GetString(1),
-                             Apellido = reader.GetString(2),
-                             Email = reader.GetString(3),
-                             Password = reader.GetString(4),
-                             Rol = reader.GetInt32(5)
-                         };
-                     }
-                     connection.Close();
-                 }
-             }
-             return ul;
-         }*/
 
     }
 

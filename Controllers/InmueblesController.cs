@@ -25,13 +25,13 @@ namespace InmobiliariaEfler.Controllers
             repoTipoInmueble = new RepositorioTipoInmueble(configuration);
         }
         // GET: Inmuebles
-
+        [Authorize]
         public ActionResult Index()
         {
             var inmuebles = repoInmueble.ObtenerInmuebles();
             return View(inmuebles);
         }
-
+        [Authorize]
         // GET: Inmuebles/Details/5
         public ActionResult Details(int id)
         {
@@ -40,6 +40,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Inmuebles/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Propietarios = repoPropietario.ObtenerPropietarios();
@@ -51,6 +52,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Inmuebles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inmueble inmueble)
         {
             try
@@ -66,6 +68,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Inmuebles/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             ViewBag.Propietarios = repoPropietario.ObtenerPropietarios();
@@ -78,6 +81,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Inmuebles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             Inmueble i = null;
@@ -105,6 +109,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Inmuebles/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             var inmueble = repoInmueble.ObtenerPorId(id);
@@ -114,6 +119,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: Inmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

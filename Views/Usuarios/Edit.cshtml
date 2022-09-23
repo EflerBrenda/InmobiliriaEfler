@@ -1,7 +1,7 @@
 @model InmobiliariaEfler.Models.Usuario
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar usuario";
 }
 
 <h1>Editar</h1>
@@ -27,38 +27,50 @@
                 <input type="email" asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input type="password" asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Rol</label>
-                <select class="form-control" name="Rol">
-                    @foreach (var rol in (IDictionary<int, string>)ViewBag.Roles)
-                    {
-                        @:<option @(rol.Key == Model.Rol ? "selected" : "") value="@rol.Key">@rol.Value</option>
-                    }
-                </select>
-                <span asp-validation-for="Rol" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            @if (User.IsInRole("Administrador"))
+            {
+                <div class="form-group">
+                    <label class="control-label">Rol</label>
+                    <select class="form-control" name="Rol">
+                        @foreach (var rol in (IDictionary<int, string>)ViewBag.Roles)
+                        {
+                            @:<option @(rol.Key == Model.Rol ? "selected" : "") value="@rol.Key">@rol.Value</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="control-label">Rol</label>
+                    <select class="form-control" name="Rol">
+                        <option value="@Model.Rol" selected>@Model.RolNombre</option>
+                    </select>
+                    <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group my-2">
                 <label asp-for="Avatar" class="control-label"></label>
                 <input type="file" name="AvatarFile" />
                 <span asp-validation-for="AvatarFile" class="text-danger"></span>
                 @if (Model.Avatar != "")
                 {
-                    <img width="50" src="@Model.Avatar" />
+                    <div class="form-group my-2">
+                        <img width="50" src="@Model.Avatar" />
+                    </div>
                 }
                 else
                 {
-                    <p>Sin avatar</p>
+                    <div class="form-group my-2">
+                        <p>Sin avatar</p>
+                    </div>
                 }
 
                 <input asp-for="Avatar" class="form-control" type="hidden" />
                 <span asp-validation-for="Avatar" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group my-2">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
@@ -66,7 +78,15 @@
 </div>
 
 <div>
-    <a asp-action="Index">Volver atrás</a>
+    @if (User.IsInRole("Administrador"))
+    {
+
+        <a asp-action="Index">Volver atrás</a>
+    }
+    else
+    {
+        <a asp-action="Details" asp-route-id=@User.Identity.Name>Volver atrás</a>
+    }
 </div>
 
 @section Scripts {

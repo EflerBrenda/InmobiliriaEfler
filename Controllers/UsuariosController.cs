@@ -33,11 +33,11 @@ namespace InmobiliariaEfler.Controllers
         }
         // GET Usuarios/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            TempData["returnUrl"] = returnUrl;
             return View();
         }
+
         // POST: Usuarios/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -68,8 +68,8 @@ namespace InmobiliariaEfler.Controllers
                     var RolNombre = u.RolNombre;
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, u.Email),
-                        new Claim("FullName", u.Nombre + " " + u.Apellido),
+                        new Claim(ClaimTypes.Name, u.Id+""),
+                        new Claim("Fullname", u.Nombre + " " + u.Apellido),
                         new Claim(ClaimTypes.Role, RolNombre),
                     };
                     var claimsIdentity = new ClaimsIdentity(
@@ -100,9 +100,17 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Usuarios/Details/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Details(int id)
         {
+            if (!User.IsInRole("Administrador"))
+            {
+
+                if (id.ToString() != User.Identity.Name)
+                {
+                    return Redirect("/Home/Restringido");
+                }
+            }
             var usuarios = repoUsuario.ObtenerPorId(id);
             return View(usuarios);
         }
@@ -160,9 +168,17 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Usuarios/Edit/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Edit(int id)
         {
+            if (!User.IsInRole("Administrador"))
+            {
+
+                if (id.ToString() != User.Identity.Name)
+                {
+                    return Redirect("/Home/Restringido");
+                }
+            }
             var usuario = repoUsuario.ObtenerPorId(id);
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View(usuario);
@@ -171,25 +187,25 @@ namespace InmobiliariaEfler.Controllers
         // POST: Usuarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Edit(int id, Usuario usuario)
         {
-            Usuario u = null;
+
             try
             {
+                if (!User.IsInRole("Administrador"))
+                {
+
+                    if (id.ToString() != User.Identity.Name)
+                    {
+                        return Redirect("/Home/Restringido");
+                    }
+                }
+                Usuario u = null;
                 u = repoUsuario.ObtenerPorId(id);
                 u.Nombre = usuario.Nombre;
                 u.Apellido = usuario.Apellido;
                 u.Email = usuario.Email;
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                       password: usuario.Password,
-                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                       prf: KeyDerivationPrf.HMACSHA1,
-                       iterationCount: 1000,
-                       numBytesRequested: 256 / 8));
-
-                u.Password = hashed;
-
                 if (usuario.AvatarFile != null)
                 {
                     string wwwPath = environment.WebRootPath;
@@ -207,10 +223,26 @@ namespace InmobiliariaEfler.Controllers
                     }
 
                 }
+
                 u.Avatar = usuario.Avatar;
-                u.Rol = usuario.Rol;
+                if (User.IsInRole("Administrador"))
+                {
+                    u.Rol = usuario.Rol;
+                }
+                else
+                {
+                    u.Rol = u.Rol;
+                }
+
                 repoUsuario.ModificacionUsuario(u);
-                return RedirectToAction(nameof(Index));
+                if (User.IsInRole("Administrador"))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Details), new { id = id });
+                }
             }
             catch (Exception e)
             {
@@ -234,9 +266,96 @@ namespace InmobiliariaEfler.Controllers
         {
             try
             {
-
                 repoUsuario.BajaUsuario(id);
                 return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        [Authorize]
+        public ActionResult EditPassword(int id, string returnUrl)
+        {
+            if (!User.IsInRole("Administrador"))
+            {
+
+                if (id.ToString() != User.Identity.Name)
+                {
+                    return Redirect("/Home/Restringido");
+                }
+            }
+            TempData["Mensaje"] = "";
+            TempData["returnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult EditPassword(int id, CambioPassword p)
+        {
+
+            try
+            {
+                if (!User.IsInRole("Administrador"))
+                {
+
+                    if (id.ToString() != User.Identity.Name)
+                    {
+                        return Redirect("/Home/Restringido");
+                    }
+                }
+                var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"].ToString();
+                string hashedPassVieja = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                       password: p.PasswordVieja,
+                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                       prf: KeyDerivationPrf.HMACSHA1,
+                       iterationCount: 1000,
+                       numBytesRequested: 256 / 8));
+                string hashedPassNueva = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                       password: p.PasswordNueva,
+                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                       prf: KeyDerivationPrf.HMACSHA1,
+                       iterationCount: 1000,
+                       numBytesRequested: 256 / 8));
+                string hashedPassConfirmacion = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                       password: p.PasswordConfirmacion,
+                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                       prf: KeyDerivationPrf.HMACSHA1,
+                       iterationCount: 1000,
+                       numBytesRequested: 256 / 8));
+
+                Usuario u = repoUsuario.ObtenerPorId(id);
+                string PassVieja = u.Password;
+
+                if (PassVieja == hashedPassVieja)
+                {
+                    if (hashedPassNueva == hashedPassConfirmacion)
+                    {
+                        p.PasswordNueva = hashedPassNueva;
+                        p.PasswordConfirmacion = hashedPassConfirmacion;
+                        repoUsuario.ModificacionPassword(id, p);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "El campo contraseña nueva y confirme contraseña no coinciden.");
+                        TempData["returnUrl"] = returnUrl;
+
+                        return View();
+                    }
+
+                    TempData["Mensaje"] = "Su contraseña a sido modificada.";
+                    TempData["returnUrl"] = returnUrl;
+                    return View();
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Su contraseña actual no coincide con la ingresada.");
+                    TempData["returnUrl"] = returnUrl;
+                    return View();
+                }
             }
             catch (Exception e)
             {

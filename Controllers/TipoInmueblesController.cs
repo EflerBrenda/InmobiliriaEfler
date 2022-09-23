@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using InmobiliariaEfler.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaEfler.Controllers
 {
@@ -16,6 +19,7 @@ namespace InmobiliariaEfler.Controllers
             repoTipoInmueble = new RepositorioTipoInmueble(configuration);
         }
         // GET: TipoInmuebles
+        [Authorize]
         public ActionResult Index()
         {
             var tipoInmuebles = repoTipoInmueble.ObtenerTipoInmueble();
@@ -24,6 +28,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: TipoInmuebles/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             var tipoInmuebles = repoTipoInmueble.ObtenerPorId(id);
@@ -31,6 +36,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: TipoInmuebles/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -39,6 +45,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: TipoInmuebles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(TipoInmueble tipoInmueble)
         {
             try
@@ -53,6 +60,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: TipoInmuebles/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             var tipoInmuebles = repoTipoInmueble.ObtenerPorId(id);
@@ -62,6 +70,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: TipoInmuebles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, TipoInmueble tipoInmueble)
         {
             TipoInmueble t = null;
@@ -79,6 +88,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: TipoInmuebles/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
             var tipoInmuebles = repoTipoInmueble.ObtenerPorId(id);
@@ -88,6 +98,7 @@ namespace InmobiliariaEfler.Controllers
         // POST: TipoInmuebles/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, TipoInmueble tipoInmueble)
         {
             try

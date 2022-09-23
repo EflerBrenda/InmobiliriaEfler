@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaEfler.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaEfler.Controllers;
 
@@ -16,13 +19,14 @@ public class HomeController : Controller
         //repoUsuario= new RepositorioUsuario(configuration);
     }
 
+    [Authorize]
     public IActionResult Index()
     {
-
+        TempData["Nombre"] = User.Claims.First(x => x.Type == "Fullname").Value;
         return View();
     }
 
-    public IActionResult Privacy()
+    public IActionResult Restringido()
     {
         return View();
     }
