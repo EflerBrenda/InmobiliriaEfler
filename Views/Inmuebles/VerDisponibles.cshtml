@@ -1,16 +1,13 @@
 @model IEnumerable<InmobiliariaEfler.Models.Inmueble>
 
 @{
-    ViewData["Title"] = "Ver inmuebles";
+    ViewData["Title"] = "Ver inmuebles disponibles";
 }
 
-<h1>Inmuebles</h1>
+<h1>Inmuebles disponibles</h1>
 
 <p>
-    <a asp-action="Create">Crear nuevo</a>
-</p>
-<p>
-    <a asp-action="VerDisponibles">Ver inmuebles disponibles</a>
+    <a asp-action="Index">Volver atrás</a>
 </p>
 <table class="table">
     <thead>
@@ -36,7 +33,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdTipo)
             </th>
-            <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -66,23 +63,15 @@
                     <td>
                         @(item.TipoInmueble.Descripcion)
                     </td>
-                    <td>
-                        @Html.ActionLink("Editar", "Edit", new {id=item.Id}) |
-                        @Html.ActionLink("Detalles", "Details", new {id=item.Id}) |
-                        @Html.ActionLink("Ver contratos", "VerContratos", new {id=item.Id})
-                        @if (User.IsInRole("Administrador"))
-                        {
-                            <label>|</label>
-                            @Html.ActionLink("Borrar", "Delete", new {id=item.Id})
-                        }
-                    </td>
                 </tr>
             }
+
         }
         else
         {
-            <td class="text-center" colspan="7">Todavia no hay inmuebles registrados, <a asp-action="Create">Presione aquí
-                    para crear uno.</a></td>
+            <td class="text-center" colspan="7">Todavia no hay inmuebles registrados, <a asp-controller="Inmuebles"
+                asp-action="Create">Presione aquí para
+                    crear uno.</a></td>
         }
     </tbody>
 </table>

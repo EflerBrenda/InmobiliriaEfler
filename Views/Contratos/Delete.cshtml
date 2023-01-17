@@ -7,8 +7,10 @@
 <h1>Borrar</h1>
 
 <h3>Esta seguro que desea borrar el contrato?</h3>
+
 <div>
     <hr />
+
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Id)
@@ -51,5 +53,6 @@
     <form asp-action="Delete">
         <input type="submit" value="Borrar" class="btn btn-danger" /> |
         <a asp-action="Index">Volver atrás</a>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     </form>
 </div>

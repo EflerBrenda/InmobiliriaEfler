@@ -117,5 +117,11 @@ namespace InmobiliariaEfler.Controllers
                 throw;
             }
         }
+        [Authorize]
+        public ActionResult VerInmuebles(int id)
+        {
+            var inmuebles = repo.ObtenerInmueblesPropios(id);
+            return View(inmuebles);
+        }
     }
 }

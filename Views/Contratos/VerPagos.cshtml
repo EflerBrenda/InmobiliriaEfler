@@ -1,13 +1,16 @@
 @model IEnumerable<InmobiliariaEfler.Models.Pago>
 
 @{
-    ViewData["Title"] = "Ver pagos";
+    ViewData["Title"] = "Ver pagos del contrato";
 }
 
 <h1>Pagos</h1>
 
 <p>
-    <a asp-action="Create">Crear nuevo</a>
+    <a asp-controller="Pagos" asp-action="Create">Crear nuevo pago</a>
+</p>
+<p>
+    <a asp-action="Index">Volver atrás</a>
 </p>
 <table class="table">
     <thead>
@@ -24,7 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdContrato)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -45,22 +47,15 @@
                     <td>
                         @(item.IdContrato + "---"+item.Contrato.Inmueble.Direccion+"---"+item.Contrato.Inquilino.Apellido)
                     </td>
-                    <td>
-                        @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
-                        @Html.ActionLink("Detalles", "Details", new { id=item.Id })
-                        @if (User.IsInRole("Administrador"))
-                        {
-                            <label>|</label>
-                            @Html.ActionLink("Borrar", "Delete", new { id=item.Id })
-                        }
-                    </td>
+
                 </tr>
             }
         }
         else
         {
-            <td class="text-center" colspan="4">Todavia no hay pagos registrados, <a asp-action="Create">Presione aquí para
-                    crear uno.</a></td>
+            <td class="text-center" colspan="4">Todavia no hay pagos registrados, <a asp-controller="Pagos"
+                asp-action="Create">Presione aquí para crear
+                    uno.</a></td>
         }
     </tbody>
 </table>

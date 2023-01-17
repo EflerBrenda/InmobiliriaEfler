@@ -13,14 +13,13 @@ public class Inmueble
     [Display(Name = "Dirección")]
     public String Direccion { get; set; }
     public int Ambientes { get; set; }
-    public decimal Superficie { get; set; }
     public decimal Latitud { get; set; }
     public decimal Longitud { get; set; }
     public decimal Precio { get; set; }
 
     public int Uso { get; set; }
 
-    [Display(Name = "Disponible")]
+    [Display(Name = "Oferta activa")]
     public Boolean OfertaActiva { get; set; }
 
     [Display(Name = "Dueño")]

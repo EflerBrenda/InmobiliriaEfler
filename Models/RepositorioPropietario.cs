@@ -111,8 +111,9 @@ namespace InmobiliariaEfler.Models
             Propietario p = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = $"SELECT id,nombre,apellido,dni,telefono,email FROM propietario" +
-                    $" WHERE id=@id";
+                string sql = @"SELECT id,nombre,apellido,dni,telefono,email 
+                FROM propietario 
+                WHERE id=@id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -136,7 +137,57 @@ namespace InmobiliariaEfler.Models
             }
             return p;
         }
+        public List<Inmueble> ObtenerInmueblesPropios(int id)
+        {
+            List<Inmueble> res = new List<Inmueble>();
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
+                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
+                p.apellido,ti.descripcion,uso
+                FROM inmueble i 
+                JOIN propietario p ON(i.id_propietario = p.id) 
+                JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
+                WHERE p.id= @id;";
+                using (var comm = new MySqlCommand(sql, conn))
+                {
+
+                    comm.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    comm.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        res.Add(new Inmueble
+                        {
+                            Id = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            Ambientes = reader.GetInt32(2),
+                            Latitud = reader.GetDecimal(3),
+                            Longitud = reader.GetDecimal(4),
+                            Precio = reader.GetDecimal(5),
+                            OfertaActiva = reader.GetBoolean(6),
+                            IdPropietario = reader.GetInt32(7),
+                            IdTipo = reader.GetInt32(8),
+                            Duenio = new Propietario
+                            {
+                                Nombre = reader.GetString(9),
+                                Apellido = reader.GetString(10),
+                            },
+                            TipoInmueble = new TipoInmueble
+                            {
+                                Descripcion = reader.GetString(11),
+                            },
+                            Uso = reader.GetInt32(12)
+                        });
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
 
     }
+
 
 }

@@ -91,7 +91,6 @@ namespace InmobiliariaEfler.Controllers
                 i = repoInmueble.ObtenerPorId(id);
                 i.Direccion = inmueble.Direccion;
                 i.Ambientes = inmueble.Ambientes;
-                i.Superficie = inmueble.Superficie;
                 i.Latitud = inmueble.Latitud;
                 i.Longitud = inmueble.Longitud;
                 i.Precio = inmueble.Precio;
@@ -132,5 +131,18 @@ namespace InmobiliariaEfler.Controllers
                 throw;
             }
         }
+        [Authorize]
+        public ActionResult VerDisponibles()
+        {
+            var inmuebles = repoInmueble.ObtenerDisponibles();
+            return View(inmuebles);
+        }
+        [Authorize]
+        public ActionResult VerContratos(int id)
+        {
+            var inmuebles = repoInmueble.ObtenerContratosPorInmueble(id);
+            return View(inmuebles);
+        }
+
     }
 }

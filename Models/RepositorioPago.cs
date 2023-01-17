@@ -21,7 +21,7 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO pagos (numero_pago, fecha_pago, importe, id_contrato) 
+                string sql = @"INSERT INTO pago (numero_pago, fecha_pago, importe, id_contrato) 
                 VALUES (@numero_pago, @fecha_pago, @importe, @id_contrato);
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
@@ -44,7 +44,7 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"DELETE FROM pagos WHERE id = @id";
+                string sql = @"DELETE FROM pago WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -61,7 +61,7 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"UPDATE pagos 
+                string sql = @"UPDATE pago 
                 SET numero_pago= @numero_pago,fecha_pago= @fecha_pago, importe=@importe,id_contrato= @id_contrato 
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
@@ -85,7 +85,7 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
-                FROM pagos p
+                FROM pago p
                 JOIN contrato c ON(p.id_contrato =c.id)
                 JOIN inquilino inq ON(c.id_inquilino = inq.id)
                 JOIN inmueble inm ON(c.id_inmueble= inm.id)";
@@ -128,7 +128,7 @@ namespace InmobiliariaEfler.Models
             using (var connection = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
-                FROM pagos p
+                FROM pago p
                 JOIN contrato c ON(p.id_contrato =c.id)
                 JOIN inquilino inq ON(c.id_inquilino = inq.id)
                 JOIN inmueble inm ON(c.id_inmueble= inm.id)
