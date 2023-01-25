@@ -21,8 +21,8 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO pago (numero_pago, fecha_pago, importe, id_contrato) 
-                VALUES (@numero_pago, @fecha_pago, @importe, @id_contrato);
+                string sql = @"INSERT INTO pago (numero_pago, fecha_pago, importe, contratoId) 
+                VALUES (@numero_pago, @fecha_pago, @importe, @contratoId);
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -30,7 +30,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@numero_pago", i.NumeroPago);
                     command.Parameters.AddWithValue("@fecha_pago", i.FechaPago);
                     command.Parameters.AddWithValue("@importe", i.Importe);
-                    command.Parameters.AddWithValue("@id_contrato", i.IdContrato);
+                    command.Parameters.AddWithValue("@contratoId", i.IdContrato);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     i.Id = res;
@@ -62,7 +62,7 @@ namespace InmobiliariaEfler.Models
             using (var connection = new MySqlConnection(connectionString))
             {
                 string sql = @"UPDATE pago 
-                SET numero_pago= @numero_pago,fecha_pago= @fecha_pago, importe=@importe,id_contrato= @id_contrato 
+                SET numero_pago= @numero_pago,fecha_pago= @fecha_pago, importe=@importe,contratoId= @contratoId 
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -71,7 +71,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@numero_pago", p.NumeroPago);
                     command.Parameters.AddWithValue("@fecha_pago", p.FechaPago);
                     command.Parameters.AddWithValue("@importe", p.Importe);
-                    command.Parameters.AddWithValue("@id_contrato", p.IdContrato);
+                    command.Parameters.AddWithValue("@contratoId", p.IdContrato);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
@@ -84,11 +84,11 @@ namespace InmobiliariaEfler.Models
             List<Pago> res = new List<Pago>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
+                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,contratoId,inm.direccion,inq.nombre,inq.apellido
                 FROM pago p
-                JOIN contrato c ON(p.id_contrato =c.id)
-                JOIN inquilino inq ON(c.id_inquilino = inq.id)
-                JOIN inmueble inm ON(c.id_inmueble= inm.id)";
+                JOIN contrato c ON(p.contratoId =c.id)
+                JOIN inquilino inq ON(c.inquilinoId = inq.id)
+                JOIN inmueble inm ON(c.inmuebleId= inm.id)";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -127,11 +127,11 @@ namespace InmobiliariaEfler.Models
             Pago i = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
+                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,contratoId,inm.direccion,inq.nombre,inq.apellido
                 FROM pago p
-                JOIN contrato c ON(p.id_contrato =c.id)
-                JOIN inquilino inq ON(c.id_inquilino = inq.id)
-                JOIN inmueble inm ON(c.id_inmueble= inm.id)
+                JOIN contrato c ON(p.contratoId =c.id)
+                JOIN inquilino inq ON(c.inquilinoId = inq.id)
+                JOIN inmueble inm ON(c.inmuebleId= inm.id)
                 WHERE p.id=@id";
                 using (var command = new MySqlCommand(sql, connection))
                 {

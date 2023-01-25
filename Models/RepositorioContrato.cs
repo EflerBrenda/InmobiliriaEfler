@@ -21,8 +21,8 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO contrato (fecha_desde,fecha_hasta,monto_alquiler,id_inmueble,id_inquilino) 
-                VALUES (@fecha_desde,@fecha_hasta,@monto_alquiler,@id_inmueble,@id_inquilino); 
+                string sql = @"INSERT INTO contrato (fecha_desde,fecha_hasta,monto_alquiler,inmuebleId,inquilinoId) 
+                VALUES (@fecha_desde,@fecha_hasta,@monto_alquiler,@inmuebleId,@inquilinoId); 
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -30,8 +30,8 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@fecha_desde", c.FechaDesde);
                     command.Parameters.AddWithValue("@fecha_hasta", c.FechaHasta);
                     command.Parameters.AddWithValue("@monto_alquiler", c.MontoAlquiler);
-                    command.Parameters.AddWithValue("@id_inmueble", c.IdInmueble);
-                    command.Parameters.AddWithValue("@id_inquilino", c.IdInquilino);
+                    command.Parameters.AddWithValue("@inmuebleId", c.IdInmueble);
+                    command.Parameters.AddWithValue("@inquilinoId", c.IdInquilino);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     c.Id = res;
@@ -127,11 +127,11 @@ namespace InmobiliariaEfler.Models
             Contrato c = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,id_inmueble,
-                id_inquilino,i.direccion,inq.nombre,inq.apellido 
+                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,inmuebleId,
+                inquilinoId,i.direccion,inq.nombre,inq.apellido 
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN inquilino inq ON (inq.id =c.id_inquilino)
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
                 WHERE c.id= @id;";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -170,11 +170,11 @@ namespace InmobiliariaEfler.Models
             List<Contrato> res = new List<Contrato>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,id_inmueble,
-                id_inquilino,i.direccion,inq.nombre,inq.apellido 
+                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,inmuebleId,
+                inquilinoId,i.direccion,inq.nombre,inq.apellido 
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN inquilino inq ON (inq.id =c.id_inquilino)
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
                 WHERE fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE()";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
@@ -212,11 +212,11 @@ namespace InmobiliariaEfler.Models
             List<Contrato> res = new List<Contrato>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,id_inmueble,
-                id_inquilino,i.direccion,inq.nombre,inq.apellido 
+                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,inmuebleId,
+                inquilinoId,i.direccion,inq.nombre,inq.apellido 
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN inquilino inq ON (inq.id =c.id_inquilino)
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
                 WHERE fecha_desde<= CURDATE() AND fecha_hasta<= CURDATE()";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
@@ -254,11 +254,11 @@ namespace InmobiliariaEfler.Models
             List<Pago> res = new List<Pago>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,id_contrato,inm.direccion,inq.nombre,inq.apellido
-                FROM pagos p
-                JOIN contrato c ON(p.id_contrato =c.id)
-                JOIN inquilino inq ON(c.id_inquilino = inq.id)
-                JOIN inmueble inm ON(c.id_inmueble= inm.id)
+                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,contratoId,inm.direccion,inq.nombre,inq.apellido
+                FROM pago p
+                JOIN contrato c ON(p.contratoId =c.id)
+                JOIN inquilino inq ON(c.inquilinoId = inq.id)
+                JOIN inmueble inm ON(c.inmuebleId= inm.id)
                 WHERE c.id= @id;";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
@@ -300,11 +300,11 @@ namespace InmobiliariaEfler.Models
             Contrato c = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,id_inmueble,
-                id_inquilino,i.direccion,inq.nombre,inq.apellido 
+                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,inmuebleId,
+                inquilinoId,i.direccion,inq.nombre,inq.apellido 
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN inquilino inq ON (inq.id =c.id_inquilino)
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
                 WHERE c.id= @id AND fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -344,11 +344,11 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
-                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
+                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN propietario p ON(i.id_propietario = p.id) 
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN propietario p ON(i.propietarioId = p.id) 
                 JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
                 WHERE (fecha_desde NOT BETWEEN @fechaDesde AND @fechaHasta) AND (fecha_hasta NOT BETWEEN @fechaDesde AND @fechaHasta)";
                 using (var comm = new MySqlCommand(sql, conn))
@@ -394,12 +394,12 @@ namespace InmobiliariaEfler.Models
             Contrato c = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,id_inmueble,
-                id_inquilino,i.direccion,inq.nombre,inq.apellido 
+                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,inmuebleId,
+                inquilinoId,i.direccion,inq.nombre,inq.apellido 
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN inquilino inq ON (inq.id =c.id_inquilino)
-                WHERE @fechaDesde NOT BETWEEN fecha_desde AND fecha_hasta AND id_inmueble= @idInmueble ";
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
+                WHERE @fechaDesde NOT BETWEEN fecha_desde AND fecha_hasta AND inmuebleId= @idInmueble ";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@fechaDesde", MySqlDbType.DateTime).Value = contrato.FechaDesde;

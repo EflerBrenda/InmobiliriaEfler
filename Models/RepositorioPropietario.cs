@@ -143,10 +143,10 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
-                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
+                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
-                JOIN propietario p ON(i.id_propietario = p.id) 
+                JOIN propietario p ON(i.propietarioId = p.id) 
                 JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
                 WHERE p.id= @id;";
                 using (var comm = new MySqlCommand(sql, conn))

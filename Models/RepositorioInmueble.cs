@@ -21,8 +21,8 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,uso,oferta_activa,id_propietario,id_tipo) 
-                VALUES (@direccion,@ambientes,@latitud,@longitud,@precio,@uso,@oferta_activa,@id_propietario,@id_tipo); 
+                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,uso,oferta_activa,propietarioId,id_tipo) 
+                VALUES (@direccion,@ambientes,@latitud,@longitud,@precio,@uso,@oferta_activa,@propietarioId,@id_tipo); 
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -35,7 +35,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@precio", i.Precio);
                     command.Parameters.AddWithValue("@uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
-                    command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
+                    command.Parameters.AddWithValue("@propietarioId", i.IdPropietario);
                     command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
@@ -69,7 +69,7 @@ namespace InmobiliariaEfler.Models
             {
                 string sql = @"UPDATE inmueble SET direccion=@direccion,ambientes=@ambientes,
                 latitud=@latitud,longitud=@longitud,precio=@precio,
-                uso=@uso,oferta_activa=@oferta_activa,id_propietario=@id_propietario,
+                uso=@uso,oferta_activa=@oferta_activa,propietarioId=@propietarioId,
                 id_tipo=@id_tipo 
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
@@ -83,7 +83,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@precio", i.Precio);
                     command.Parameters.AddWithValue("@Uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
-                    command.Parameters.AddWithValue("@id_propietario", i.IdPropietario);
+                    command.Parameters.AddWithValue("@propietarioId", i.IdPropietario);
                     command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -144,10 +144,10 @@ namespace InmobiliariaEfler.Models
             using (var connection = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
-                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
+                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
-                JOIN propietario p ON(i.id_propietario = p.id) 
+                JOIN propietario p ON(i.propietarioId = p.id) 
                 JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
                 WHERE i.id=@id;";
                 using (var command = new MySqlCommand(sql, connection))
@@ -192,10 +192,10 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
-                precio,oferta_activa,id_propietario,id_tipo,p.nombre,
+                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
-                JOIN propietario p ON(i.id_propietario = p.id) 
+                JOIN propietario p ON(i.propietarioId = p.id) 
                 JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
                 WHERE oferta_activa=1;";
                 using (var comm = new MySqlCommand(sql, conn))
@@ -237,11 +237,11 @@ namespace InmobiliariaEfler.Models
             List<Contrato> res = new List<Contrato>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,id_inmueble,
-                id_inquilino,i.direccion,inq.nombre,inq.apellido 
+                string sql = @"SELECT c.id, fecha_desde, fecha_hasta,monto_alquiler,inmuebleId,
+                inquilinoId,i.direccion,inq.nombre,inq.apellido 
                 FROM contrato c 
-                JOIN inmueble i ON (i.id =c.id_inmueble) 
-                JOIN inquilino inq ON (inq.id =c.id_inquilino)
+                JOIN inmueble i ON (i.id =c.inmuebleId) 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
                 WHERE i.id = @id;";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
