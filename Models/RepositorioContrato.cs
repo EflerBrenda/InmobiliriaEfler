@@ -344,13 +344,13 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
-                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
+                precio,oferta_activa,propietarioId,tipoInmuebleId,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM contrato c 
                 JOIN inmueble i ON (i.id =c.inmuebleId) 
                 JOIN propietario p ON(i.propietarioId = p.id) 
-                JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
-                WHERE (fecha_desde NOT BETWEEN @fechaDesde AND @fechaHasta) AND (fecha_hasta NOT BETWEEN @fechaDesde AND @fechaHasta)";
+                JOIN tipo_inmueble ti ON (i.tipoInmuebleId = ti.id)
+                WHERE (fecha_desde BETWEEN @fechaDesde AND @fechaHasta) AND (fecha_hasta BETWEEN @fechaDesde AND @fechaHasta)";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     comm.Parameters.Add("@fechaDesde", MySqlDbType.DateTime).Value = fechaDesde;

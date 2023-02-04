@@ -21,8 +21,8 @@ namespace InmobiliariaEfler.Models
             int res = -1;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"INSERT INTO inmueble (direccion,ambientes,superficie,latitud,longitud,precio,uso,oferta_activa,propietarioId,id_tipo) 
-                VALUES (@direccion,@ambientes,@latitud,@longitud,@precio,@uso,@oferta_activa,@propietarioId,@id_tipo); 
+                string sql = @"INSERT INTO inmueble (direccion,ambientes,latitud,longitud,precio,uso,oferta_activa,propietarioId,tipoInmuebleId) 
+                VALUES (@direccion,@ambientes,@latitud,@longitud,@precio,@uso,@oferta_activa,@propietarioId,@tipoInmuebleId); 
                 SELECT LAST_INSERT_ID();";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -36,7 +36,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@propietarioId", i.IdPropietario);
-                    command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
+                    command.Parameters.AddWithValue("@tipoInmuebleId", i.IdTipo);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     i.Id = res;
@@ -70,7 +70,7 @@ namespace InmobiliariaEfler.Models
                 string sql = @"UPDATE inmueble SET direccion=@direccion,ambientes=@ambientes,
                 latitud=@latitud,longitud=@longitud,precio=@precio,
                 uso=@uso,oferta_activa=@oferta_activa,propietarioId=@propietarioId,
-                id_tipo=@id_tipo 
+                tipoInmuebleId=@tipoInmuebleId 
                 WHERE id = @id";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -84,7 +84,7 @@ namespace InmobiliariaEfler.Models
                     command.Parameters.AddWithValue("@Uso", i.Uso);
                     command.Parameters.AddWithValue("@oferta_activa", i.OfertaActiva);
                     command.Parameters.AddWithValue("@propietarioId", i.IdPropietario);
-                    command.Parameters.AddWithValue("@id_tipo", i.IdTipo);
+                    command.Parameters.AddWithValue("@tipoInmuebleId", i.IdTipo);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
@@ -143,12 +143,12 @@ namespace InmobiliariaEfler.Models
             Inmueble i = null;
             using (var connection = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT i.id,direccion,ambientes,superficie,latitud,longitud,
-                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
+                string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
+                precio,oferta_activa,propietarioId,tipoInmuebleId,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
                 JOIN propietario p ON(i.propietarioId = p.id) 
-                JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
+                JOIN tipo_inmueble ti ON (i.tipoInmuebleId = ti.id)
                 WHERE i.id=@id;";
                 using (var command = new MySqlCommand(sql, connection))
                 {
@@ -192,11 +192,11 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
-                precio,oferta_activa,propietarioId,id_tipo,p.nombre,
+                precio,oferta_activa,propietarioId,tipoInmuebleId,p.nombre,
                 p.apellido,ti.descripcion,uso
                 FROM inmueble i 
                 JOIN propietario p ON(i.propietarioId = p.id) 
-                JOIN tipo_inmueble ti ON (i.id_tipo = ti.id)
+                JOIN tipo_inmueble ti ON (i.tipoInmuebleId = ti.id)
                 WHERE oferta_activa=1;";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
