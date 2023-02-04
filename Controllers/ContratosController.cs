@@ -216,6 +216,7 @@ namespace InmobiliariaEfler.Controllers
             TempData["FechaDesde"] = DateTime.Today.Date.ToString("yyyy-MM-dd");
             TempData["FechaHasta"] = DateTime.Today.Date.ToString("yyyy-MM-dd");
             return obtenerVistaInmueblesDisponibles();
+
         }
 
 
