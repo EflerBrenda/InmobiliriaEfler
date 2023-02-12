@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Ocurrio un error inesperado.";
+}
+
+<h1>Ocurrio un error inesperado.</h1>
+
+<p>Por favor, vuelva a intentarlo o llame a su proveedor.</p>
+
+<div>
+    @if (User.IsInRole("Administrador"))
+    {
+
+        <a asp-action="Index">Volver atrás</a>
+    }
+    else
+    {
+        <a asp-controller="Home" asp-action="Index">Volver atrás</a>
+    }
+</div>

@@ -54,7 +54,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorInesperado.cshtml");
             }
         }
 
@@ -84,7 +84,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorConstraint.cshtml");
             }
         }
 
@@ -103,13 +103,12 @@ namespace InmobiliariaEfler.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
                 repoPago.BajaPago(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorConstraint.cshtml");
             }
         }
     }

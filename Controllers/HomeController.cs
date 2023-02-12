@@ -10,13 +10,10 @@ namespace InmobiliariaEfler.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    //private RepositorioUsuario repoUsuario;
 
-
-    public HomeController(ILogger<HomeController> logger)//,IConfiguration configuration
+    public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
-        //repoUsuario= new RepositorioUsuario(configuration);
     }
 
     [Authorize]

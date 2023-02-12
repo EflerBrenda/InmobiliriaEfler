@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "No se puede eliminar o editar el registro.";
+}
+
+<h1>No se puede eliminar o editar el registro.</h1>
+
+<p>El registro que intenta eliminar o editar esta asociado con otro y no se puede eliminar.</p>
+
+<div>
+    @if (User.IsInRole("Administrador"))
+    {
+
+        <a asp-action="Index">Volver atrás</a>
+    }
+    else
+    {
+        <a asp-controller="Home" asp-action="Index">Volver atrás</a>
+    }
+</div>

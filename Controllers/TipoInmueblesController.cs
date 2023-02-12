@@ -55,7 +55,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorInesperado.cshtml");
             }
         }
 
@@ -83,7 +83,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorConstraint.cshtml");
             }
         }
 
@@ -108,7 +108,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorConstraint.cshtml");
             }
         }
     }

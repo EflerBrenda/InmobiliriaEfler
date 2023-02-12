@@ -15,9 +15,12 @@ namespace InmobiliariaEfler.Controllers
     public class PropietariosController : Controller
     {
         private RepositorioPropietario repo;
+
+
         public PropietariosController(IConfiguration configuration)
         {
             repo = new RepositorioPropietario(configuration);
+
         }
         // GET: Propietarios
         [Authorize]
@@ -56,7 +59,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorInesperado.cshtml");
             }
         }
 
@@ -88,7 +91,7 @@ namespace InmobiliariaEfler.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorConstraint.cshtml");
             }
         }
 
@@ -108,13 +111,12 @@ namespace InmobiliariaEfler.Controllers
         {
             try
             {
-
                 repo.BajaPropietario(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
-                throw;
+                return View("Views/Shared/ErrorConstraint.cshtml");
             }
         }
         [Authorize]

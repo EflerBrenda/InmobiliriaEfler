@@ -96,7 +96,6 @@ namespace InmobiliariaEfler.Controllers
         [Authorize]
         public ActionResult Edit(int id)
         {
-
             var contrato = repoContrato.ObtenerPorId(id);
             return View(contrato);
         }
