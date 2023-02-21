@@ -48,6 +48,14 @@
                 </select>
                 <span asp-validation-for="IdInmueble" class="text-danger"></span>
             </div>
+            <div>
+                @if (TempData["error"] != "")
+                {
+                    <div class="text-danger">
+                        <p>@TempData["error"]</p>
+                    </div>
+                }
+            </div>
             <div class="form-group my-2">
                 <input type="submit" value="Crear" class="btn btn-primary" />
             </div>
@@ -60,5 +68,7 @@
 </div>
 
 @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

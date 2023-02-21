@@ -95,6 +95,7 @@ namespace InmobiliariaEfler.Controllers
         [Authorize]
         public ActionResult Delete(int id)
         {
+            TempData["Error"] = "";
             var contrato = repoContrato.ObtenerPorId(id);
             return View(contrato);
         }
@@ -105,22 +106,25 @@ namespace InmobiliariaEfler.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Contrato contrato)
         {
+            Contrato c = repoContrato.ObtenerPorId(id);
             try
             {
                 Contrato cv = repoContrato.ObtenerContratoVigente(id);
                 if (cv != null)
                 {
-                    ModelState.AddModelError("", "No se puede eliminar el contrato ya que esta vigente.");
-                    return RedirectToAction(nameof(Delete), id);
+                    TempData["Error"] = "No se puede eliminar el contrato ya que esta vigente.";
+                    return View(c);
                 }
-
-                repoContrato.BajaContrato(id);
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    repoContrato.BajaContrato(id);
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("", "Error inesperado, por favor vuelva a intentarlo");
-                return RedirectToAction(nameof(Delete), id);
+                TempData["Error"] = "Error inesperado, por favor vuelva a intentarlo";
+                return View(c);
             }
         }
 
