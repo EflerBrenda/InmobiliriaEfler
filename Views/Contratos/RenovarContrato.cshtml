@@ -2,19 +2,38 @@
 
 @{
     ViewData["Title"] = "Renovar contrato";
+    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+    var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
 }
 
-<h1>Editar contrato</h1>
+<h1>Renovar contrato</h1>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="RenovarContrato">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input type="text" asp-for="Id" class="form-control" readonly />
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <label asp-for="Id" class="control-label">Contrato n° @Model.Id</label>
+            </div>
+            <div class="form-group">
+
+                @foreach (var item in Inmuebles)
+                {
+                    @if (item.Id == Model.IdInmueble)
+                    {
+                        <label class="control-label">Dirección inmueble: @(item.Direccion)</label>
+                    }
+                }
+            </div>
+            <div class="form-group">
+                @foreach (var item in Inquilinos)
+                {
+                    @if (item.Id == Model.IdInquilino)
+                    {
+                        <label class="control-label">Inquilino: @(item.Nombre + " " + item.Apellido)</label>
+                    }
+                }
             </div>
             <div class="form-group">
                 <label asp-for="FechaDesde" class="control-label"></label>
@@ -31,16 +50,13 @@
                 <input type="text" asp-for="MontoAlquiler" class="form-control" />
                 <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label class="control-label">Inmuebles</label>
-                <input asp-for="Inmueble" class="form-control" value=@Model.Inmueble.Direccion readonly />
-                <span asp-validation-for="Inmueble" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Inquilino</label>
-                <input asp-for="Inquilino" class="form-control"
-                    value="@Model.Inquilino.Nombre @Model.Inquilino.Apellido" readonly />
-                <span asp-validation-for="Inquilino" class="text-danger"></span>
+            <div>
+                @if (TempData["error"] != "")
+                {
+                    <div class="text-danger">
+                        <p>@TempData["error"]</p>
+                    </div>
+                }
             </div>
             <div class="form-group my-2">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
@@ -54,5 +70,7 @@
 </div>
 
 @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -64,10 +64,9 @@
                         @(item.Inmueble.Direccion)
                     </td>
                     <td>
-                        @(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)
+                        @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
                     </td>
                     <td>
-                        @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
                         @Html.ActionLink("Detalles", "Details", new { id=item.Id}) |
                         @Html.ActionLink("Ver pagos", "VerPagos", new { id=item.Id })
                         @if (User.IsInRole("Administrador"))

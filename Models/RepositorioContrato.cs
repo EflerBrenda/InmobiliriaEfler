@@ -65,7 +65,6 @@ namespace InmobiliariaEfler.Models
                 string sql = @"UPDATE contrato SET fecha_desde= @fecha_desde, 
                 fecha_hasta= @fecha_hasta,monto_alquiler= @monto_alquiler
                 WHERE id = @id";
-                //Falta editar el anterior inmueble a activo de nuevo.
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -175,7 +174,8 @@ namespace InmobiliariaEfler.Models
                 FROM contrato c 
                 JOIN inmueble i ON (i.id =c.inmuebleId) 
                 JOIN inquilino inq ON (inq.id =c.inquilinoId)
-                WHERE fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE()";
+                WHERE fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE()
+                ORDER BY fecha_desde ASC";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -217,7 +217,8 @@ namespace InmobiliariaEfler.Models
                 FROM contrato c 
                 JOIN inmueble i ON (i.id =c.inmuebleId) 
                 JOIN inquilino inq ON (inq.id =c.inquilinoId)
-                WHERE fecha_desde<= CURDATE() AND fecha_hasta<= CURDATE()";
+                WHERE fecha_desde<= CURDATE() AND fecha_hasta<= CURDATE()
+                ORDER BY fecha_desde ASC";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -259,7 +260,8 @@ namespace InmobiliariaEfler.Models
                 JOIN contrato c ON(p.contratoId =c.id)
                 JOIN inquilino inq ON(c.inquilinoId = inq.id)
                 JOIN inmueble inm ON(c.inmuebleId= inm.id)
-                WHERE c.id= @id;";
+                WHERE c.id= @id
+                ORDER BY fecha_pago ASC;";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     comm.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -305,7 +307,8 @@ namespace InmobiliariaEfler.Models
                 FROM contrato c 
                 JOIN inmueble i ON (i.id =c.inmuebleId) 
                 JOIN inquilino inq ON (inq.id =c.inquilinoId)
-                WHERE c.id= @id AND fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE();";
+                WHERE c.id= @id AND fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE()
+                ORDER BY fecha_desde ASC;";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -344,13 +347,16 @@ namespace InmobiliariaEfler.Models
             using (var conn = new MySqlConnection(connectionString))
             {
                 string sql = @"SELECT i.id,direccion,ambientes,latitud,longitud,
-                precio,oferta_activa,propietarioId,tipoInmuebleId,p.nombre,
-                p.apellido,ti.descripcion,uso
-                FROM contrato c 
-                JOIN inmueble i ON (i.id =c.inmuebleId) 
-                JOIN propietario p ON(i.propietarioId = p.id) 
-                JOIN tipo_inmueble ti ON (i.tipoInmuebleId = ti.id)
-                WHERE (fecha_desde BETWEEN @fechaDesde AND @fechaHasta) AND (fecha_hasta BETWEEN @fechaDesde AND @fechaHasta)";
+                                precio,propietarioId,tipoInmuebleId,p.nombre,
+                                p.apellido,ti.descripcion,uso
+                                FROM inmueble i
+                                JOIN propietario p ON (p.id= i.propietarioId)
+                                JOIN tipo_inmueble ti ON (ti.id = i.tipoInmuebleId)
+                                where i.id NOT IN
+                                (SELECT i.id
+                                FROM inmueble i 
+                                LEFT JOIN contrato c ON (i.id =c.inmuebleId) 
+                                WHERE ( @fechaDesde BETWEEN fecha_desde AND fecha_hasta) OR (@fechaHasta BETWEEN fecha_desde AND fecha_hasta) OR (@fechaDesde < fecha_desde AND @fechaHasta  > fecha_hasta) ) AND oferta_activa=1;";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
                     comm.Parameters.Add("@fechaDesde", MySqlDbType.DateTime).Value = fechaDesde;
@@ -368,19 +374,18 @@ namespace InmobiliariaEfler.Models
                             Latitud = reader.GetDecimal(3),
                             Longitud = reader.GetDecimal(4),
                             Precio = reader.GetDecimal(5),
-                            OfertaActiva = reader.GetBoolean(6),
-                            IdPropietario = reader.GetInt32(7),
-                            IdTipo = reader.GetInt32(8),
+                            IdPropietario = reader.GetInt32(6),
+                            IdTipo = reader.GetInt32(7),
                             Duenio = new Propietario
                             {
-                                Nombre = reader.GetString(9),
-                                Apellido = reader.GetString(10),
+                                Nombre = reader.GetString(8),
+                                Apellido = reader.GetString(9),
                             },
                             TipoInmueble = new TipoInmueble
                             {
-                                Descripcion = reader.GetString(11),
+                                Descripcion = reader.GetString(10),
                             },
-                            Uso = reader.GetInt32(12)
+                            Uso = reader.GetInt32(11)
                         });
                     }
                     conn.Close();
@@ -399,10 +404,11 @@ namespace InmobiliariaEfler.Models
                 FROM contrato c 
                 JOIN inmueble i ON (i.id =c.inmuebleId) 
                 JOIN inquilino inq ON (inq.id =c.inquilinoId)
-                WHERE @fechaDesde NOT BETWEEN fecha_desde AND fecha_hasta AND inmuebleId= @idInmueble ";
+                WHERE ( (@fechaDesde BETWEEN fecha_desde AND fecha_hasta) OR (@fechaHasta  BETWEEN fecha_desde AND fecha_hasta) OR (@fechaDesde < fecha_desde AND @fechaHasta > fecha_hasta)) AND inmuebleId= @idInmueble";
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@fechaDesde", MySqlDbType.DateTime).Value = contrato.FechaDesde;
+                    command.Parameters.Add("@fechaHasta", MySqlDbType.DateTime).Value = contrato.FechaHasta;
                     command.Parameters.Add("@idInmueble", MySqlDbType.Int32).Value = contrato.IdInmueble;
                     command.CommandType = CommandType.Text;
                     connection.Open();
