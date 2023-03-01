@@ -148,23 +148,17 @@ namespace InmobiliariaEfler.Controllers
             Contrato contrato = repoContrato.ObtenerPorId(id);
             try
             {
-
-                if (contrato.IdInmueble == null || contrato.IdInmueble < 0)
-                {
-                    mensaje = "Debe ingresar un inmueble.";
-                    return obtenerVistaEditar(mensaje, contrato);
-                }
-                if (contrato.FechaDesde == null || contrato.FechaDesde.Date.ToString("yyyy-MM-dd") == "0001-01-01")
+                if (con.FechaDesde == null || con.FechaDesde.Date.ToString("yyyy-MM-dd") == "0001-01-01")
                 {
                     mensaje = "Debe ingresar una fecha valida desde.";
                     return obtenerVistaEditar(mensaje, contrato);
                 }
-                if (contrato.FechaHasta == null || contrato.FechaHasta.Date.ToString("yyyy-MM-dd") == "0001-01-01")
+                if (con.FechaHasta == null || con.FechaHasta.Date.ToString("yyyy-MM-dd") == "0001-01-01")
                 {
                     mensaje = "Debe ingresar una fecha valida hasta.";
                     return obtenerVistaEditar(mensaje, contrato);
                 }
-                if (contrato.FechaHasta < contrato.FechaDesde)
+                if (con.FechaHasta < con.FechaDesde)
                 {
                     mensaje = "La fecha hasta no puede ser menor que la fecha desde.";
                     return obtenerVistaEditar(mensaje, contrato);
@@ -193,7 +187,6 @@ namespace InmobiliariaEfler.Controllers
                 return obtenerVistaEditar(mensaje, contrato);
             }
         }
-
 
         [Authorize]
         public ActionResult VerContratosVigentes()
