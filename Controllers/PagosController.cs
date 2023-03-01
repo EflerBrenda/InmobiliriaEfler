@@ -36,7 +36,10 @@ namespace InmobiliariaEfler.Controllers
 
         // GET: Pagos/Create
         public ActionResult Create()
+        //public ActionResult Create(int idContrato) VER EL TEMA DE CREAR UN PAGO DESDE UN CONTRATO EN PARTICULAR
         {
+            TempData["fechaActual"] = DateTime.Today.Date.ToString("yyyy-MM-dd");
+            //TempData["idContrato"] = idContrato;
             ViewBag.Contratos = repoContrato.ObtenerContratos();
             return View();
         }

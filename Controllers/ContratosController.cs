@@ -127,6 +127,73 @@ namespace InmobiliariaEfler.Controllers
                 return View(c);
             }
         }
+        // GET: Contratos/Edit/5
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+            TempData["Error"] = "";
+            var contrato = repoContrato.ObtenerPorId(id);
+            ViewBag.Inquilinos = repoInquilino.ObtenerInquilinos();
+            ViewBag.Inmuebles = repoInmueble.ObtenerInmuebles();
+            return View(contrato);
+        }
+
+        // POST: Contratos/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult Edit(int id, Contrato con)
+        {
+            String mensaje = "";
+            Contrato contrato = repoContrato.ObtenerPorId(id);
+            try
+            {
+
+                if (contrato.IdInmueble == null || contrato.IdInmueble < 0)
+                {
+                    mensaje = "Debe ingresar un inmueble.";
+                    return obtenerVistaEditar(mensaje, contrato);
+                }
+                if (contrato.FechaDesde == null || contrato.FechaDesde.Date.ToString("yyyy-MM-dd") == "0001-01-01")
+                {
+                    mensaje = "Debe ingresar una fecha valida desde.";
+                    return obtenerVistaEditar(mensaje, contrato);
+                }
+                if (contrato.FechaHasta == null || contrato.FechaHasta.Date.ToString("yyyy-MM-dd") == "0001-01-01")
+                {
+                    mensaje = "Debe ingresar una fecha valida hasta.";
+                    return obtenerVistaEditar(mensaje, contrato);
+                }
+                if (contrato.FechaHasta < contrato.FechaDesde)
+                {
+                    mensaje = "La fecha hasta no puede ser menor que la fecha desde.";
+                    return obtenerVistaEditar(mensaje, contrato);
+                }
+
+                Contrato c = repoContrato.ComprobarDisponibilidad(con);
+                if (c != null)
+                {
+                    mensaje = "Inmueble no disponible en esas fechas";
+                    return obtenerVistaEditar(mensaje, contrato);
+                }
+                Contrato contratoNuevo = new Contrato();
+                contratoNuevo.Id = contrato.Id;
+                contratoNuevo.FechaDesde = con.FechaDesde;
+                contratoNuevo.FechaHasta = con.FechaHasta;
+                contratoNuevo.IdInmueble = contrato.IdInmueble;
+                contratoNuevo.IdInquilino = contrato.IdInquilino;
+                contratoNuevo.MontoAlquiler = con.MontoAlquiler;
+                repoContrato.ModificacionContrato(contratoNuevo);
+                return RedirectToAction(nameof(VerContratosVigentes));
+
+            }
+            catch (Exception e)
+            {
+                mensaje = "Error inesperado, por favor vuelva a intentarlo";
+                return obtenerVistaEditar(mensaje, contrato);
+            }
+        }
+
 
         [Authorize]
         public ActionResult VerContratosVigentes()

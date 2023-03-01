@@ -30,6 +30,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdInquilino)
             </th>
+            <th> </th>
 
         </tr>
     </thead>
@@ -55,7 +56,10 @@
                         @(item.Inmueble.Direccion)
                     </td>
                     <td>
-                        @(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)
+                        @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id=item.Id})
                     </td>
 
                 </tr>
@@ -64,9 +68,7 @@
         else
         {
             <td class="text-center" colspan="6">Todavia no hay contratos registrados, <a asp-controller="Contratos"
-                asp-action="Create">Presione
-                    aquí para
-                    crear uno.</a></td>
+                asp-action="Create">Presione aquí para crear uno.</a></td>
         }
     </tbody>
 </table>
