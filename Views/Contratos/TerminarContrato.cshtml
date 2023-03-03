@@ -1,0 +1,44 @@
+@model InmobiliariaEfler.Models.Contrato
+
+@{
+    ViewData["Title"] = "Terminar contrato";
+}
+
+<h1>Terminar contrato</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="TerminarContrato">
+            <div class="form-group">
+                <label>Si se desea cancelar el contrato se aplicará una multa equivalente a @TempData["meses"] meses de
+                    alquiler.</label>
+            </div>
+            <div class="form-group">
+                <label>Contrato n°: @Model.Id</label>
+            </div>
+            <div class="form-group">
+                <label>Dirección: @Model.Inmueble.Direccion</label>
+            </div>
+            <div class="form-group">
+                <label>Inquilino: @Model.Inquilino.Nombre @Model.Inquilino.Apellido</label>
+            </div>
+            <div class="form-group">
+                <label>Importe de la multa: @TempData["multa"]</label>
+            </div>
+            <div class="form-group my-2">
+                <input type="submit" value="Aceptar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="VerContratosVigentes">Volver atrás</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

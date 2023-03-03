@@ -9,6 +9,9 @@ public class Pago
     [Display(Name = "Número de Pago")]
     public String NumeroPago { get; set; }
 
+    [Display(Name = "Descripción")]
+    public String Descripcion { get; set; }
+
     [Display(Name = "Fecha de pago")]
     public DateTime FechaPago { get; set; }
     public decimal Importe { get; set; }

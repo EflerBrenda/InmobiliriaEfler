@@ -16,11 +16,13 @@ namespace InmobiliariaEfler.Controllers
         private RepositorioContrato repoContrato;
         private RepositorioInmueble repoInmueble;
         private RepositorioInquilino repoInquilino;
+        private RepositorioPago repoPago;
         public ContratosController(IConfiguration configuration)
         {
             repoContrato = new RepositorioContrato(configuration);
             repoInmueble = new RepositorioInmueble(configuration);
             repoInquilino = new RepositorioInquilino(configuration);
+            repoPago = new RepositorioPago(configuration);
         }
         // GET: Contratos
         [Authorize]
@@ -74,6 +76,11 @@ namespace InmobiliariaEfler.Controllers
                 if (contrato.FechaDesde > contrato.FechaHasta)
                 {
                     mensaje = "La fecha inicio no puede ser mayor que la fecha de fin.";
+                    return obtenerVista(mensaje);
+                }
+                if (contrato.MontoAlquiler == null || contrato.MontoAlquiler.ToString() == "" || contrato.MontoAlquiler.ToString().Equals("0"))
+                {
+                    mensaje = "Ingrese un monto valido.";
                     return obtenerVista(mensaje);
                 }
                 Contrato c = repoContrato.ComprobarDisponibilidad(contrato);
@@ -161,6 +168,11 @@ namespace InmobiliariaEfler.Controllers
                 if (con.FechaHasta < con.FechaDesde)
                 {
                     mensaje = "La fecha hasta no puede ser menor que la fecha desde.";
+                    return obtenerVistaEditar(mensaje, contrato);
+                }
+                if (con.MontoAlquiler == null || con.MontoAlquiler.ToString() == "" || con.MontoAlquiler.ToString().Equals("0"))
+                {
+                    mensaje = "Ingrese un monto valido.";
                     return obtenerVistaEditar(mensaje, contrato);
                 }
 
@@ -317,6 +329,44 @@ namespace InmobiliariaEfler.Controllers
 
                 return View();
             }
+        }
+        [Authorize]
+        public ActionResult TerminarContrato(int id)
+        {
+            var contrato = repoContrato.ObtenerPorId(id);
+            var meses = 2;
+            TempData["meses"] = meses;
+            TempData["multa"] = (contrato.MontoAlquiler * meses);
+            return View(contrato);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult TerminarContrato(int id, Contrato c)
+        {
+            try
+            {
+                var meses = 2;
+                Contrato contrato = repoContrato.ObtenerPorId(id);
+                Pago multa = new Pago();
+                multa.NumeroPago = "Multa";
+                multa.Descripcion = "Se aplica multa por finalización del contrato vigente.";
+                multa.FechaPago = DateTime.Today.Date;
+                multa.Importe = (contrato.MontoAlquiler * meses);
+                multa.IdContrato = id;
+                repoPago.AltaPago(multa);
+                contrato.FechaHasta = DateTime.Today.Date;
+                repoContrato.ModificacionContrato(contrato);
+                return RedirectToAction(nameof(VerContratosVigentes));
+
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(VerContratosVigentes));
+            }
+
         }
 
         private ActionResult obtenerVista(String mensaje)

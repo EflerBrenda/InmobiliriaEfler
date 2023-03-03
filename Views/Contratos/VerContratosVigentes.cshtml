@@ -59,7 +59,8 @@
                         @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
                     </td>
                     <td>
-                        @Html.ActionLink("Editar", "Edit", new { id=item.Id})
+                        @Html.ActionLink("Editar", "Edit", new { id=item.Id}) |
+                        @Html.ActionLink("Terminar Contrato", "TerminarContrato", new { id=item.Id})
                     </td>
 
                 </tr>

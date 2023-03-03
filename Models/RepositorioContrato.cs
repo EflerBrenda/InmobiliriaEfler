@@ -174,7 +174,7 @@ namespace InmobiliariaEfler.Models
                 FROM contrato c 
                 JOIN inmueble i ON (i.id =c.inmuebleId) 
                 JOIN inquilino inq ON (inq.id =c.inquilinoId)
-                WHERE fecha_desde<= CURDATE() AND fecha_hasta>= CURDATE()
+                WHERE fecha_desde<= CURDATE() AND fecha_hasta> CURDATE()
                 ORDER BY fecha_desde ASC";
                 using (var comm = new MySqlCommand(sql, conn))
                 {
@@ -255,7 +255,7 @@ namespace InmobiliariaEfler.Models
             List<Pago> res = new List<Pago>();
             using (var conn = new MySqlConnection(connectionString))
             {
-                string sql = @"SELECT p.id, numero_pago, fecha_pago,importe,contratoId,inm.direccion,inq.nombre,inq.apellido
+                string sql = @"SELECT p.id, numero_pago,descripcion, fecha_pago,importe,contratoId,inm.direccion,inq.nombre,inq.apellido
                 FROM pago p
                 JOIN contrato c ON(p.contratoId =c.id)
                 JOIN inquilino inq ON(c.inquilinoId = inq.id)
@@ -274,19 +274,20 @@ namespace InmobiliariaEfler.Models
                         {
                             Id = reader.GetInt32(0),
                             NumeroPago = reader.GetString(1),
-                            FechaPago = reader.GetDateTime(2),
-                            Importe = reader.GetDecimal(3),
-                            IdContrato = reader.GetInt32(4),
+                            Descripcion = reader.GetString(2),
+                            FechaPago = reader.GetDateTime(3),
+                            Importe = reader.GetDecimal(4),
+                            IdContrato = reader.GetInt32(5),
                             Contrato = new Contrato
                             {
                                 Inmueble = new Inmueble
                                 {
-                                    Direccion = reader.GetString(5),
+                                    Direccion = reader.GetString(6),
                                 },
                                 Inquilino = new Inquilino
                                 {
-                                    Nombre = reader.GetString(6),
-                                    Apellido = reader.GetString(7),
+                                    Nombre = reader.GetString(7),
+                                    Apellido = reader.GetString(8),
                                 }
                             }
 

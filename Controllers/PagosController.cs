@@ -38,7 +38,6 @@ namespace InmobiliariaEfler.Controllers
         public ActionResult Create()
         {
             TempData["fechaActual"] = DateTime.Today.Date.ToString("yyyy-MM-dd");
-            //TempData["idContrato"] = idContrato;
             ViewBag.Contratos = repoContrato.ObtenerContratos();
             return View();
         }
@@ -50,7 +49,6 @@ namespace InmobiliariaEfler.Controllers
         {
             try
             {
-
                 repoPago.AltaPago(pago);
                 return RedirectToAction(nameof(Index));
             }
@@ -63,6 +61,7 @@ namespace InmobiliariaEfler.Controllers
         // GET: Pagos/Edit/5
         public ActionResult Edit(int id)
         {
+            TempData["Error"] = "";
             ViewBag.Contratos = repoContrato.ObtenerContratos();
             var pago = repoPago.ObtenerPorId(id);
             return View(pago);
@@ -73,14 +72,31 @@ namespace InmobiliariaEfler.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Pago pago)
         {
-            Pago p = null;
+            String mensaje = "";
+            Pago p = repoPago.ObtenerPorId(id);
             try
             {
-                p = repoPago.ObtenerPorId(id);
-                p.NumeroPago = pago.NumeroPago;
+                if (pago.FechaPago == null || pago.FechaPago.Date.ToString("yyyy-MM-dd") == "0001-01-01")
+                {
+                    mensaje = "Debe ingresar una fecha valida de pago.";
+                    return obtenerVistaEditar(mensaje, p);
+                }
+                if (pago.Descripcion == null || pago.Descripcion.Equals(""))
+                {
+                    mensaje = "Debe ingresar una descripción.";
+                    return obtenerVistaEditar(mensaje, p);
+                }
+                if (pago.Importe == null || pago.Importe.Equals("") || pago.Importe.Equals("0"))
+                {
+                    mensaje = "Debe ingresar un importe valido.";
+                    return obtenerVistaEditar(mensaje, p);
+                }
+
+                p.NumeroPago = p.NumeroPago;
+                p.Descripcion = pago.Descripcion;
                 p.FechaPago = pago.FechaPago;
                 p.Importe = pago.Importe;
-                p.IdContrato = pago.IdContrato;
+                p.IdContrato = p.IdContrato;
                 repoPago.ModificacionPago(p);
                 return RedirectToAction(nameof(Index));
             }
@@ -112,6 +128,13 @@ namespace InmobiliariaEfler.Controllers
             {
                 return View("Views/Shared/ErrorConstraint.cshtml");
             }
+        }
+
+        private ActionResult obtenerVistaEditar(String mensaje, Pago p)
+        {
+            TempData["Error"] = mensaje;
+            ViewBag.Contratos = repoContrato.ObtenerContratos();
+            return View(p);
         }
     }
 }

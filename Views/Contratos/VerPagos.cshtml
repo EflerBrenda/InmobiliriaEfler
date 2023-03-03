@@ -20,6 +20,9 @@
                 @Html.DisplayNameFor(model => model.NumeroPago)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.FechaPago)
             </th>
             <th>
@@ -38,6 +41,9 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.NumeroPago)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
                     </td>
                     <td>
                         @(item.FechaPago.Date.ToString("dd/MM/yyyy"))
