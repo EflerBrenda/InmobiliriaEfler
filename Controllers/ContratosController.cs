@@ -99,7 +99,7 @@ namespace InmobiliariaEfler.Controllers
             }
         }
         // GET: Contratos/Delete/5
-        [Authorize]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             TempData["Error"] = "";

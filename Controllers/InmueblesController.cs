@@ -108,7 +108,7 @@ namespace InmobiliariaEfler.Controllers
         }
 
         // GET: Inmuebles/Delete/5
-        [Authorize]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var inmueble = repoInmueble.ObtenerPorId(id);
