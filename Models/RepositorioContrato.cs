@@ -441,5 +441,57 @@ namespace InmobiliariaEfler.Models
             return c;
         }
 
+        public List<Contrato> ObtenerContratosPorInmueble(int id)
+        {
+            List<Contrato> res = new List<Contrato>();
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                string sql = @"SELECT c.id
+                FROM contrato c 
+                JOIN inmueble i ON (i.id =c.inmuebleId)
+                WHERE i.id= @id";
+                using (var comm = new MySqlCommand(sql, conn))
+                {
+                    comm.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        res.Add(new Contrato
+                        {
+                            Id = reader.GetInt32(0),
+                        });
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
+        public List<Contrato> ObtenerContratosPorInquilino(int id)
+        {
+            List<Contrato> res = new List<Contrato>();
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                string sql = @"SELECT c.id
+                FROM contrato c 
+                JOIN inquilino inq ON (inq.id =c.inquilinoId)
+                WHERE inq.id= @id";
+                using (var comm = new MySqlCommand(sql, conn))
+                {
+                    comm.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        res.Add(new Contrato
+                        {
+                            Id = reader.GetInt32(0),
+                        });
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
     }
 }

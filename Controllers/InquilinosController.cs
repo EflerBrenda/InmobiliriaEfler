@@ -14,9 +14,11 @@ namespace InmobiliariaEfler.Controllers
     public class InquilinosController : Controller
     {
         private RepositorioInquilino repo;
+        private RepositorioContrato repoContrato;
         public InquilinosController(IConfiguration configuration)
         {
             repo = new RepositorioInquilino(configuration);
+            repoContrato = new RepositorioContrato(configuration);
         }
         // GET: inquilinos
         [Authorize]
@@ -93,6 +95,7 @@ namespace InmobiliariaEfler.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
+            TempData["error"] = "";
             var inquilino = repo.ObtenerPorId(id);
             return View(inquilino);
         }
@@ -105,7 +108,13 @@ namespace InmobiliariaEfler.Controllers
         {
             try
             {
-
+                Inquilino i = repo.ObtenerPorId(id);
+                List<Contrato> listaContratos = repoContrato.ObtenerContratosPorInquilino(id);
+                if (listaContratos.Count != 0)
+                {
+                    TempData["error"] = "No se puede eliminar el inquilino ya que esta asociado a un contrato.";
+                    return View(i);
+                }
                 repo.BajaInquilino(id);
                 return RedirectToAction(nameof(Index));
             }

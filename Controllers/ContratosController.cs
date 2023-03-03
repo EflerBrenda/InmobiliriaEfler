@@ -122,11 +122,16 @@ namespace InmobiliariaEfler.Controllers
                     TempData["Error"] = "No se puede eliminar el contrato ya que esta vigente.";
                     return View(c);
                 }
-                else
+                List<Pago> listaPagos = repoContrato.ObtenerPagosPorContrato(id);
+                if (listaPagos.Count != 0)
                 {
-                    repoContrato.BajaContrato(id);
-                    return RedirectToAction(nameof(Index));
+                    TempData["Error"] = "No se puede eliminar el contrato ya que posee pagos.";
+                    return View(c);
                 }
+
+                repoContrato.BajaContrato(id);
+                return RedirectToAction(nameof(Index));
+
             }
             catch (Exception e)
             {

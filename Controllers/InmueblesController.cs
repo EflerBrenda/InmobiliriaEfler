@@ -16,6 +16,7 @@ namespace InmobiliariaEfler.Controllers
         private RepositorioInmueble repoInmueble;
         private RepositorioPropietario repoPropietario;
         private RepositorioTipoInmueble repoTipoInmueble;
+        private RepositorioContrato repoContrato;
 
         //private RepositorioBase repoBase=new RepositorioBase();
         public InmueblesController(IConfiguration configuration)
@@ -23,6 +24,8 @@ namespace InmobiliariaEfler.Controllers
             repoInmueble = new RepositorioInmueble(configuration);
             repoPropietario = new RepositorioPropietario(configuration);
             repoTipoInmueble = new RepositorioTipoInmueble(configuration);
+            repoContrato = new RepositorioContrato(configuration);
+
         }
         // GET: Inmuebles
         [Authorize]
@@ -111,6 +114,7 @@ namespace InmobiliariaEfler.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
+            TempData["error"] = "";
             var inmueble = repoInmueble.ObtenerPorId(id);
             return View(inmueble);
         }
@@ -119,10 +123,17 @@ namespace InmobiliariaEfler.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Inmueble inmueble)
         {
             try
             {
+                Inmueble i = repoInmueble.ObtenerPorId(id);
+                List<Contrato> listaContratos = repoContrato.ObtenerContratosPorInmueble(id);
+                if (listaContratos.Count != 0)
+                {
+                    TempData["error"] = "No se puede eliminar el inmueble ya que esta asociado a un contrato.";
+                    return View(i);
+                }
                 repoInmueble.BajaInmueble(id);
                 return RedirectToAction(nameof(Index));
             }

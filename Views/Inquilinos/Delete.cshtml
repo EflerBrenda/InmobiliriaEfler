@@ -50,6 +50,14 @@
     </dl>
 
     <form asp-action="Delete">
+        <div>
+            @if (TempData["error"] != "")
+            {
+                <div class="text-danger">
+                    <p>@TempData["error"]</p>
+                </div>
+            }
+        </div>
         <input type="submit" value="Borrar" class="btn btn-danger" /> |
         <a asp-action="Index">Volver a la lista de Inquilinos</a>
     </form>
